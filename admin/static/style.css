@@ -1,0 +1,228 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+  font-weight: normal;
+}
+
+/* link */
+a:link, a:visited {
+	color: #cd0100;
+	text-decoration: none;
+}
+a:focus, a:hover {
+	text-decoration: underline;
+}
+
+/* titolo in testa alla pagina */
+.titolopagina {
+	font-size: 1.6em;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  margin-left: 0;
+  border-bottom: thin dotted black;
+}
+
+/* testo al piede della pagina */
+.piedepagina {
+	font-size: 0.8em;
+  text-align: right;
+  margin-top: 0;
+  border-top: thin dotted black;
+  background: #e0e0e0;
+}
+
+/* tabelle  */
+table {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* input  */
+input {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* textarea */
+textarea {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* select  */
+select {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* option  */
+option {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* smile delle fatture pagate */
+.smile {
+	font-size: 1.4em;
+  font-weight: normal;
+}
+
+/* titoli della home */
+.hometitolo {
+	font-size: 1.4em;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  border-bottom: thin solid black;
+}
+
+/* per le tabelle con i div*/
+.divtable {
+	display: table;
+	width:auto;
+}
+.divtr { 
+	display: table-row; 
+	width:auto;
+}
+.divtd { 
+	display: table-cell;
+	width: auto;
+	border: 1px solid black;
+}
+
+
+/*-MENU---------------------*/
+#cssmenu {
+  font-size: 1em;
+  line-height: 15px;
+  text-transform: uppercase;
+  text-align: left;
+}
+#cssmenu > ul {
+  width: auto;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background: #ffffff;
+  border: 1px solid #ece6e8;
+  border-bottom: 3px solid #d9ced2;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
+#cssmenu > ul li#responsive-tab {
+  display: none;
+  /* Hide for large screens */
+}
+#cssmenu > ul li {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+}
+#cssmenu > ul li.right {
+  float: right;
+}
+#cssmenu > ul li.has-sub {
+  position: relative;
+}
+#cssmenu > ul li.has-sub:hover ul {
+  display: block;
+}
+#cssmenu > ul li.has-sub ul {
+  display: none;
+  width: 250px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  background: #ffffff;
+  border: 1px solid #ece6e8;
+  border-bottom: 3px solid #d9ced2;
+  border-top: 0 none;
+}
+#cssmenu > ul li.has-sub ul li {
+  display: block;
+}
+#cssmenu > ul li.has-sub > a {
+  background-image: url('caret.png');
+  background-repeat: no-repeat;
+  background-position: 90% -95%;
+}
+#cssmenu > ul li.has-sub > a.active,
+#cssmenu > ul li.has-sub > a:hover {
+  background: #d80041 url('caret.png') no-repeat;
+  background-position: 90% 195%;
+}
+#cssmenu > ul li a {
+  display: block;
+  padding: 12px 24px 11px 24px;
+  text-decoration: none;
+  color: #747474;
+  text-shadow: 0px 1px 0px #fff;
+}
+#cssmenu > ul li a.active,
+#cssmenu > ul li a:hover {
+  background: #d80041;
+  color: #fff;
+  text-shadow: 0px 1px 0px #000;
+}
+@media (max-width: 600px) {
+  #cssmenu > ul {
+    width: 100%;
+  }
+  #cssmenu > ul li#responsive-tab {
+    display: block;
+  }
+  #cssmenu > ul li#responsive-tab a {
+    background: url('menu.png') no-repeat;
+    background-position: 95% -35%;
+  }
+  #cssmenu > ul li#responsive-tab a:hover {
+    background-color: #d80041;
+    background-position: 95% 135%;
+  }
+  #cssmenu > ul li {
+    display: none;
+  }
+  #cssmenu > ul li.right {
+    float: none;
+  }
+  #cssmenu > ul li.has-sub {
+    position: relative;
+  }
+  #cssmenu > ul li.has-sub ul {
+    display: block;
+    position: static;
+    width: 100%;
+    background: #ffffff;
+    border: 0 none;
+  }
+  #cssmenu > ul li.has-sub ul li {
+    display: block !important;
+  }
+  #cssmenu > ul li.has-sub ul li a span {
+    display: block;
+    padding-left: 24px;
+  }
+  #cssmenu > ul li.has-sub > a {
+    background-image: none;
+  }
+}
+/* Make sure they show even if hidden in mobile view by JS */
+@media (min-width: 600px) {
+  #cssmenu > ul > li.collapsed {
+    display: inline-block !important;
+    *display: inline;
+    zoom: 1;
+  }
+  #cssmenu > ul ul li.collapsed {
+    display: block !important;
+  }
+}

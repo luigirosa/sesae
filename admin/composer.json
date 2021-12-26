@@ -1,0 +1,6 @@
+{
+    "require": {
+        "pear/net_dns2": "^1.5",
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}

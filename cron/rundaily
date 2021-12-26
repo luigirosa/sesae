@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /var/www/set.sesae.com/cron
+php rundaily.php > /dev/null 2>&1
+

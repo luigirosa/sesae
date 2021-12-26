@@ -1,0 +1,125 @@
+@media screen and (max-width: 600px) {
+	.column {
+		width: 100%;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.contenitorecolonne {
+	display: flex;
+}
+
+.colcontenuto {
+  flex: 70%;
+  padding: 10px;
+}
+
+.colindice {
+  flex: 30%;
+  padding: 1px;
+  border-left: thin solid black;
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+  font-weight: normal;
+}
+
+/* link */
+a:link, a:visited {
+	color: #ff8000;
+	text-decoration: none;
+}
+a:focus, a:hover {
+	text-decoration: underline;
+}
+
+/* titolo in testa alla pagina */
+h1 {
+	font-size: 1.6em;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  margin-left: 0;
+  border-bottom: thin solid black;
+}
+
+/* titolo in testa alle colonne */
+h2 {
+	font-size: 1.4em;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  margin-left: 0;
+}
+
+/* testo al piede della pagina */
+.piedepagina {
+	font-size: 0.8em;
+  text-align: right;
+  margin-top: 0;
+  border-top: thin solid black;
+}
+
+
+
+/* ----------------------------- */
+
+
+
+
+/* tabelle  */
+table {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* input  */
+input {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* textarea */
+textarea {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* select  */
+select {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* option  */
+option {
+	font-size: 0.9em;
+  font-weight: normal;
+}
+
+/* smile delle fatture pagate */
+.smile {
+	font-size: 1.4em;
+  font-weight: normal;
+}
+
+/* titoli della home */
+.hometitolo {
+	font-size: 1.4em;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  border-bottom: thin solid black;
+}
+
+
