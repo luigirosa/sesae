@@ -46,30 +46,29 @@ require('../admin/global.php');
 //
 // numerositi
 $r = $db->query("SELECT COUNT(*) FROM target WHERE enabled='1'")->fetch_array();
-rrdaddvalue(0, 'numerositi', $r[0], true);
+rrdaddvalue(0, 'numerositi', $r[0]);
 // numerositihttps
 $r = $db->query("SELECT COUNT(*)
                  FROM target 
                  JOIN targetdata ON targetdata.idtarget=target.idtarget
                  WHERE targetdata.ishttps='1'")->fetch_array();
-rrdaddvalue(0, 'numerositihttps', $r[0], true);
+rrdaddvalue(0, 'numerositihttps', $r[0]);
 // numerositiipv6
 $r = $db->query("SELECT COUNT(*)
                  FROM target 
                  JOIN targetdata ON targetdata.idtarget=target.idtarget
                  WHERE targetdata.ipv6<>''")->fetch_array();
-rrdaddvalue(0, 'numerositiipv6', $r[0], true);
+rrdaddvalue(0, 'numerositiipv6', $r[0]);
 // ipv4univoci
 $r = $db->query("SELECT COUNT(DISTINCT ipv4) FROM targetdata")->fetch_array();
-rrdaddvalue(0, 'ipv4univoci', $r[0], true);
+rrdaddvalue(0, 'ipv4univoci', $r[0]);
 // conframe
 $r = $db->query("SELECT COUNT(*)
                  FROM target 
                  JOIN http_html ON http_html.idtarget=target.idtarget
                  WHERE http_html.http_html LIKE '%<iframe%' OR http_html.http_html LIKE '%<frameset%'")->fetch_array();
-rrdaddvalue(0, 'conframe', $r[0], true);
+rrdaddvalue(0, 'conframe', $r[0]);
 
-die();
 //
 // RRD categorie
 //
@@ -77,31 +76,31 @@ $qq = $db->query("SELECT idcategory FROM category");
 while ($rr = $qq->fetch_array()) {
 	// numerositi
 	$r = $db->query("SELECT COUNT(*) FROM target WHERE enabled='1' AND idcategory='$rr[idcategory]'")->fetch_array();
-	rrdaddvalue($rr['idcategory'], 'numerositi', $r[0], true);
+	rrdaddvalue($rr['idcategory'], 'numerositi', $r[0]);
 	// numerositihttps
 	$r = $db->query("SELECT COUNT(*)
 	                 FROM target 
 	                 JOIN targetdata ON targetdata.idtarget=target.idtarget
 	                 WHERE targetdata.ishttps='1' AND target.idcategory='$rr[idcategory]'")->fetch_array();
-	rrdaddvalue($rr['idcategory'], 'numerositihttps', $r[0], true);
+	rrdaddvalue($rr['idcategory'], 'numerositihttps', $r[0]);
 	// numerositiipv6
 	$r = $db->query("SELECT COUNT(*)
 	                 FROM target 
 	                 JOIN targetdata ON targetdata.idtarget=target.idtarget
 	                 WHERE targetdata.ipv6<>'' AND target.idcategory='$rr[idcategory]'")->fetch_array();
-	rrdaddvalue($rr['idcategory'], 'numerositiipv6', $r[0], true);
+	rrdaddvalue($rr['idcategory'], 'numerositiipv6', $r[0]);
 	// ipv4univoci
 	$r = $db->query("SELECT COUNT(DISTINCT ipv4) 
 	                 FROM targetdata 
 	                 JOIN target ON targetdata.idtarget=target.idtarget
 	                 WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
-	rrdaddvalue($rr['idcategory'], 'ipv4univoci', $r[0], true);
+	rrdaddvalue($rr['idcategory'], 'ipv4univoci', $r[0]);
 	// conframe
 	$r = $db->query("SELECT COUNT(*)
 	                 FROM target 
 	                 JOIN http_html ON http_html.idtarget=target.idtarget
 	                 WHERE target.idcategory='$rr[idcategory]' AND (http_html.http_html LIKE '%<iframe%' OR http_html.http_html LIKE '%<frameset%')")->fetch_array();
-	rrdaddvalue($rr['idcategory'], 'conframe', $r[0], true);
+	rrdaddvalue($rr['idcategory'], 'conframe', $r[0]);
 }
 
 

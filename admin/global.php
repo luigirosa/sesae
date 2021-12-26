@@ -1296,8 +1296,6 @@ function rrdinterface($cmd, $aopt, $fileout='') {
 		break;
 	}
 	exec($cmdline , $aout, $retval);
-	print_r($cmdline);
-	print_r($aout);
 	return $aout;
 }
 
@@ -1310,8 +1308,8 @@ function rrdinterface($cmd, $aopt, $fileout='') {
  * 20211224 prima versione
  *
  */
-function rrdaddvalue($idcategory, $campo, $valore, $iscron = false) {
-	$filename = $iscron ? '../rrd/' : 'rrd/';
+function rrdaddvalue($idcategory, $campo, $valore) {
+	$filename = '../rrd/';
 	// ok, per ora il cinema del case non serve, ma se un domani i parametri RRD cambiassero non dovrei riscrivere daccapo la funzione
 	switch (strtolower($campo)) {
 		case 'numerositi':
@@ -1319,18 +1317,12 @@ function rrdaddvalue($idcategory, $campo, $valore, $iscron = false) {
 			if (!is_file($filename)) {
 				$opts = array( "--step 1d",
 				               "DS:numerositi:GAUGE:10d:0:U",
-                		   "RRA:AVERAGE:0.5:1d:1w",
-                		   "RRA:AVERAGE:0.5:1d:2m",
-                		   "RRA:AVERAGE:0.5:1w:13m",
-                		   "RRA:AVERAGE:0.5:1w:3y",
-                		   "RRA:MAX:0.5:1d:1w",
-                		   "RRA:MAX:0.5:1d:1m",
-                		   "RRA:MAX:0.5:1w:1y",
-                		   "RRA:MAX:0.5:1w:3y",
-                		   "RRA:MIN:0.5:1d:1w",
-                		   "RRA:MIN:0.5:1d:1m",
-                		   "RRA:MIN:0.5:1w:1y",
-                		   "RRA:MIN:0.5:1w:3y",
+                		   "RRA:MAX:0.5:30:1",
+                		   "RRA:MAX:0.5:365:1",
+                		   "RRA:MAX:0.5:700:1",
+                		   "RRA:MIN:0.5:30:1",
+                		   "RRA:MIN:0.5:365:1",
+                		   "RRA:MIN:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1341,18 +1333,12 @@ function rrdaddvalue($idcategory, $campo, $valore, $iscron = false) {
 			if (!is_file($filename)) {
 				$opts = array( "--step 1d",
 				               "DS:numerositihttps:GAUGE:10d:0:U",
-                		   "RRA:AVERAGE:0.5:1d:1w",
-                		   "RRA:AVERAGE:0.5:1d:2m",
-                		   "RRA:AVERAGE:0.5:1w:13m",
-                		   "RRA:AVERAGE:0.5:1w:3y",
-                		   "RRA:MAX:0.5:1d:1w",
-                		   "RRA:MAX:0.5:1d:1m",
-                		   "RRA:MAX:0.5:1w:1y",
-                		   "RRA:MAX:0.5:1w:3y",
-                		   "RRA:MIN:0.5:1d:1w",
-                		   "RRA:MIN:0.5:1d:1m",
-                		   "RRA:MIN:0.5:1w:1y",
-                		   "RRA:MIN:0.5:1w:3y",
+                		   "RRA:MAX:0.5:30:1",
+                		   "RRA:MAX:0.5:365:1",
+                		   "RRA:MAX:0.5:700:1",
+                		   "RRA:MIN:0.5:30:1",
+                		   "RRA:MIN:0.5:365:1",
+                		   "RRA:MIN:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1363,18 +1349,12 @@ function rrdaddvalue($idcategory, $campo, $valore, $iscron = false) {
 			if (!is_file($filename)) {
 				$opts = array( "--step 1d",
 				               "DS:numerositiipv6:GAUGE:10d:0:U",
-                		   "RRA:AVERAGE:0.5:1d:1w",
-                		   "RRA:AVERAGE:0.5:1d:2m",
-                		   "RRA:AVERAGE:0.5:1w:13m",
-                		   "RRA:AVERAGE:0.5:1w:3y",
-                		   "RRA:MAX:0.5:1d:1w",
-                		   "RRA:MAX:0.5:1d:1m",
-                		   "RRA:MAX:0.5:1w:1y",
-                		   "RRA:MAX:0.5:1w:3y",
-                		   "RRA:MIN:0.5:1d:1w",
-                		   "RRA:MIN:0.5:1d:1m",
-                		   "RRA:MIN:0.5:1w:1y",
-                		   "RRA:MIN:0.5:1w:3y",
+                		   "RRA:MAX:0.5:30:1",
+                		   "RRA:MAX:0.5:365:1",
+                		   "RRA:MAX:0.5:700:1",
+                		   "RRA:MIN:0.5:30:1",
+                		   "RRA:MIN:0.5:365:1",
+                		   "RRA:MIN:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1385,18 +1365,12 @@ function rrdaddvalue($idcategory, $campo, $valore, $iscron = false) {
 			if (!is_file($filename)) {
 				$opts = array( "--step 1d",
 				               "DS:ipv4univoci:GAUGE:10d:0:U",
-                		   "RRA:AVERAGE:0.5:1d:1w",
-                		   "RRA:AVERAGE:0.5:1d:2m",
-                		   "RRA:AVERAGE:0.5:1w:13m",
-                		   "RRA:AVERAGE:0.5:1w:3y",
-                		   "RRA:MAX:0.5:1d:1w",
-                		   "RRA:MAX:0.5:1d:1m",
-                		   "RRA:MAX:0.5:1w:1y",
-                		   "RRA:MAX:0.5:1w:3y",
-                		   "RRA:MIN:0.5:1d:1w",
-                		   "RRA:MIN:0.5:1d:1m",
-                		   "RRA:MIN:0.5:1w:1y",
-                		   "RRA:MIN:0.5:1w:3y",
+                		   "RRA:MAX:0.5:30:1",
+                		   "RRA:MAX:0.5:365:1",
+                		   "RRA:MAX:0.5:700:1",
+                		   "RRA:MIN:0.5:30:1",
+                		   "RRA:MIN:0.5:365:1",
+                		   "RRA:MIN:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1407,18 +1381,12 @@ function rrdaddvalue($idcategory, $campo, $valore, $iscron = false) {
 			if (!is_file($filename)) {
 				$opts = array( "--step 1d",
 				               "DS:conframe:GAUGE:10d:0:U",
-                		   "RRA:AVERAGE:0.5:1d:1w",
-                		   "RRA:AVERAGE:0.5:1d:2m",
-                		   "RRA:AVERAGE:0.5:1w:13m",
-                		   "RRA:AVERAGE:0.5:1w:3y",
-                		   "RRA:MAX:0.5:1d:1w",
-                		   "RRA:MAX:0.5:1d:1m",
-                		   "RRA:MAX:0.5:1w:1y",
-                		   "RRA:MAX:0.5:1w:3y",
-                		   "RRA:MIN:0.5:1d:1w",
-                		   "RRA:MIN:0.5:1d:1m",
-                		   "RRA:MIN:0.5:1w:1y",
-                		   "RRA:MIN:0.5:1w:3y",
+                		   "RRA:MAX:0.5:30:1",
+                		   "RRA:MAX:0.5:365:1",
+                		   "RRA:MAX:0.5:700:1",
+                		   "RRA:MIN:0.5:30:1",
+                		   "RRA:MIN:0.5:365:1",
+                		   "RRA:MIN:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
