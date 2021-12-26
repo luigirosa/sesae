@@ -41,7 +41,7 @@
 //error_reporting ( E_ALL );
 //ini_set ( "display_errors", 'on' );
 
-define('SESAE_VERSION', "2021121001");
+define('SESAE_VERSION', "2021122601");
 
 if(!defined('SESAE')) {
 	header ('Location: https://www.google.com');
