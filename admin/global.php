@@ -1323,6 +1323,9 @@ function rrdaddvalue($idcategory, $campo, $valore) {
                 		   "RRA:MIN:0.5:30:1",
                 		   "RRA:MIN:0.5:365:1",
                 		   "RRA:MIN:0.5:700:1",
+                		   "RRA:AVERAGE:0.5:30:1",
+                		   "RRA:AVERAGE:0.5:365:1",
+                		   "RRA:AVERAGE:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1339,6 +1342,9 @@ function rrdaddvalue($idcategory, $campo, $valore) {
                 		   "RRA:MIN:0.5:30:1",
                 		   "RRA:MIN:0.5:365:1",
                 		   "RRA:MIN:0.5:700:1",
+                		   "RRA:AVERAGE:0.5:30:1",
+                		   "RRA:AVERAGE:0.5:365:1",
+                		   "RRA:AVERAGE:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1355,6 +1361,9 @@ function rrdaddvalue($idcategory, $campo, $valore) {
                 		   "RRA:MIN:0.5:30:1",
                 		   "RRA:MIN:0.5:365:1",
                 		   "RRA:MIN:0.5:700:1",
+                		   "RRA:AVERAGE:0.5:30:1",
+                		   "RRA:AVERAGE:0.5:365:1",
+                		   "RRA:AVERAGE:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1371,6 +1380,9 @@ function rrdaddvalue($idcategory, $campo, $valore) {
                 		   "RRA:MIN:0.5:30:1",
                 		   "RRA:MIN:0.5:365:1",
                 		   "RRA:MIN:0.5:700:1",
+                		   "RRA:AVERAGE:0.5:30:1",
+                		   "RRA:AVERAGE:0.5:365:1",
+                		   "RRA:AVERAGE:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
@@ -1387,6 +1399,9 @@ function rrdaddvalue($idcategory, $campo, $valore) {
                 		   "RRA:MIN:0.5:30:1",
                 		   "RRA:MIN:0.5:365:1",
                 		   "RRA:MIN:0.5:700:1",
+                		   "RRA:AVERAGE:0.5:30:1",
+                		   "RRA:AVERAGE:0.5:365:1",
+                		   "RRA:AVERAGE:0.5:700:1",
                 		  );
 				rrdinterface('create', $opts, $filename);
 			}
