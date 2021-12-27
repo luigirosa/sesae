@@ -17,6 +17,7 @@
  * 20200423 rimozione _fam
  * 20200614 basta log
  * 20211204 cambio licenza per pubblicazione sorgenti
+ * 20211227 aggiunta campo id univoco esterno
  *
  * This file is part of SESAE.
  *
@@ -115,6 +116,7 @@ if (isset($_POST['idtarget'])) {
 		$a[] = $b2->campoSQL("idcategory", $_POST['idcategory']);
 		$a[] = $b2->campoSQL("description", $desc);
 		$a[] = $b2->campoSQL("mailhost", $_POST['mailhost']);
+		$a[] = $b2->campoSQL("external_id", $_POST['external_id']);
 		if (isset($_POST['resetvisita'])) {
 			$a[] = $b2->campoSQL("visited", rand(1,20000));
 		}
@@ -177,6 +179,7 @@ if (0 == $idtarget) {
 	$r['visited'] = rand(1,20000);
 	$r['lastprobe'] = 0;
 	$r['mailhost'] = '';
+	$r['external_id'] = '';
 } else {
 	$r = $db->query("SELECT * FROM target WHERE idtarget='$idtarget'")->fetch_array();
 	$intestazione = "Modifica $r[description]";
@@ -196,6 +199,7 @@ echo $b2->rigaEdit('Categoria', $b2->inputSelect('idcategory', $b2->creaArraySel
 echo $b2->rigaEdit('Descrizione', $b2->inputText('description', $r['description'], 100, 250) . " <input type='button' id='btnfixcase' value='Correggi masiuscolo'>");
 echo $b2->rigaEdit('URL', $b2->inputText('url', $r['url'], 100, 250) . "<br/><span class='err' id='errurl' name='errurl'>" . date("G:i:s") . "</span>");
 echo $b2->rigaEdit('Mail host', $b2->inputText('mailhost', $r['mailhost'], 100, 250, 'mailhost', "autocomplete='off'"));
+echo $b2->rigaEdit('ID esterno', $b2->inputText('external_id', $r['external_id'], 50, 50) . " es. codice Belfiore per i Comuni");
 $probe = '';
 $qx = $db->query("SELECT idprobe,probe FROM probe WHERE isadmin<>1 ORDER BY probe");
 while ($rx = $qx->fetch_array()) {
