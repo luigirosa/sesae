@@ -211,6 +211,12 @@ echo $b2->rigaEdit('Test', "<a href='$r[url]' target='_blank'>$r[url]</a>");
 if ($r['idcategory'] == 4) { // comune
 	echo $b2->rigaEdit('Google', "<a href='https://www.google.com/search?q=" . urlencode("comune di " . $r['description']) . "' target='_blank'>Cerca su Goooooogle</a>");
 	echo $b2->rigaEdit('Tuttitalia', "<a href='https://www.tuttitalia.it/search?q=" . urlencode($r['description']) . "' target='_blank'>Cerca su Tuttitalia</a>");
+} elseif  ($r['idcategory'] == 3) { // provincia
+	echo $b2->rigaEdit('Google', "<a href='https://www.google.com/search?q=" . urlencode("provincia di " . $r['description']) . "' target='_blank'>Cerca su Goooooogle</a>");
+	echo $b2->rigaEdit('Tuttitalia', "<a href='https://www.tuttitalia.it/search?q=" . urlencode($r['description']) . "' target='_blank'>Cerca su Tuttitalia</a>");
+} elseif  ($r['idcategory'] == 2) { // regione
+	echo $b2->rigaEdit('Google', "<a href='https://www.google.com/search?q=" . urlencode("regione " . $r['description']) . "' target='_blank'>Cerca su Goooooogle</a>");
+	echo $b2->rigaEdit('Tuttitalia', "<a href='https://www.tuttitalia.it/search?q=" . urlencode($r['description']) . "' target='_blank'>Cerca su Tuttitalia</a>");
 } else {
 	echo $b2->rigaEdit('Google', "<a href='https://www.google.com/search?q=" . urlencode($r['description']) . "' target='_blank'>Cerca su Goooooogle</a>");
 }
