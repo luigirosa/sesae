@@ -61,7 +61,7 @@ if (isset($_POST['sitelist'])) {
 					$a[] = $b2->campoSql('idcategory', $idcategoria, B2_NORM_TRIM || B2_NORM_SQL);
 					$a[] = $b2->campoSql('description', $nome);
 					$a[] = $b2->campoSql('url', $url);
-					$a[] = $b2->campoSql('visited', rand(1,20000));
+					$a[] = $b2->campoSql('visited', rand(1,900000));
 					$a[] = $b2->campoSql('mailhost', '__new__');
 					$db->query("INSERT INTO target SET " . implode(',', $a));
 					$idtarget = $db->insert_id;
