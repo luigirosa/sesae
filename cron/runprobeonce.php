@@ -54,7 +54,7 @@ if (isset($argv[1]) and is_numeric($argv[1])) {
 	echo "\nIDtarget forzato da command line.";
 } else {
 	// ritardo casuale per evitare collisioni
-	sleep(rand(1,5) * $aSetup['site']['id']);
+	sleep(rand(1,7) * $aSetup['site']['id']);
 	$r = $db->query("SELECT target.idtarget,target.visited
 	                 FROM target
 	                 LEFT JOIN targetprobe ON target.idtarget=targetprobe.idtarget
