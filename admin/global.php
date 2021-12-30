@@ -20,6 +20,7 @@
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20211210 aggiunto forzarescan()
  * 20211226 merge admin+public e ristrutturazione albero directory
+ * 20211230 romosso RRD e storicizzazione su SQL
  *
  * This file is part of SESAE.
  *
@@ -82,6 +83,27 @@ use GuzzleHttp\Client;
 
 define('HTTP_ENORESOLVE', 9991);
 define('HTTP_ENONUMERIC', 9992);
+
+// gruppi di storicizzazione
+define('ST_GEN_NUMEROSITI',      1);
+define('ST_GEN_INHTTPS',         2);
+define('ST_GEN_CONIPV6',         3);
+define('ST_GEN_IPV4UNIVOCI',     4);
+define('ST_GEN_CONFRAME',       20);
+define('ST_HTTPSERVER',          5);
+ define('ST_APACHEVER',           6);
+ define('ST_APACHEOS',            7);
+ define('ST_IISVER',              8);
+ define('ST_POWERBY',             9);
+ define('ST_PHPVER',             10);
+ define('ST_COUNTRYIPV4',        11);
+define('ST_SSLISSUER',          12);
+define('ST_SSLHASH',            13);
+define('ST_CONTENTTYPE',        14);
+define('ST_DNS',                15);
+define('ST_MX',                 16);
+ define('ST_TLD',                17);
+define('ST_GENERATOR',          19);
 
 //array con gli algoritmi delle statistiche
 $aAlgoStat = array('RPL'=>'Sostituisci il testo','RGX'=>'RegEx');
@@ -1272,142 +1294,23 @@ function tempopassato($secondi, $short = false) {
 
 
 /**
- * rrdinterface($cmd, $aopt, $fileout)
+ * storicizza($data, $idcategory, $idcampostorico, $valoreint=0, $valorestr='')
  * 
- * Interfaccia verso RRD, serve per evitare di dipendere dalle funzioni di interfaccia di php-rrd 
- * 
- * 20211224 prima versione
+ * Storicizza un campo
  *
+ * 20211230 prima versione
+ * 
  */
-function rrdinterface($cmd, $aopt, $fileout='') {
-	$aout = null;
-	switch (strtolower($cmd)) {
-		case 'graph':
-			$cmdline = "rrdtool graph $fileout ";
-			$cmdline .= implode(' ', $aopt);
-		break;
-		case 'update':
-			$cmdline = "rrdtool update $fileout ";
-			$cmdline .= implode(' ', $aopt);
-		break;
-		case 'create':
-			$cmdline = "rrdtool create $fileout ";
-			$cmdline .= implode(' ', $aopt);
-		break;
-	}
-	exec($cmdline , $aout, $retval);
-	return $aout;
+function storicizza($data, $idcategory, $idcampostorico, $valoreint=0, $valorestr='') {
+	global $db,$b2;
+	$a = array();
+	$a[] =	$b2->campoSQL("data", $data);
+	$a[] =	$b2->campoSQL("idcategory", $idcategory);
+	$a[] =	$b2->campoSQL("idcampostorico", $idcampostorico);
+	$a[] =	$b2->campoSQL("valoreint", $valoreint);
+	$a[] =	$b2->campoSQL("valorestr", $valorestr, B2_NORM_SQL || B2_NORM_TRIM);
+	$db->query("INSERT INTO storico SET " . implode(',', $a));
 }
 
-
-/**
- * rrdaddvalue($idcategoriy, $campo, $valore, $iscron = false)
- * 
- * Aggiunge un valore ad un database RRD
- * 
- * 20211224 prima versione
- *
- */
-function rrdaddvalue($idcategory, $campo, $valore) {
-	$filename = '../rrd/';
-	// ok, per ora il cinema del case non serve, ma se un domani i parametri RRD cambiassero non dovrei riscrivere daccapo la funzione
-	switch (strtolower($campo)) {
-		case 'numerositi':
-			$filename .= "numerositi-$idcategory.rrd";
-			if (!is_file($filename)) {
-				$opts = array( "--step 1d",
-				               "DS:numerositi:GAUGE:10d:0:U",
-                		   "RRA:MAX:0.5:30:1",
-                		   "RRA:MAX:0.5:365:1",
-                		   "RRA:MAX:0.5:700:1",
-                		   "RRA:MIN:0.5:30:1",
-                		   "RRA:MIN:0.5:365:1",
-                		   "RRA:MIN:0.5:700:1",
-                		   "RRA:AVERAGE:0.5:30:1",
-                		   "RRA:AVERAGE:0.5:365:1",
-                		   "RRA:AVERAGE:0.5:700:1",
-                		  );
-				rrdinterface('create', $opts, $filename);
-			}
-			rrdinterface('update', array("N:$valore"), $filename);
-		break;
-		case 'numerositihttps':
-			$filename .= "numerositihttps-$idcategory.rrd";
-			if (!is_file($filename)) {
-				$opts = array( "--step 1d",
-				               "DS:numerositihttps:GAUGE:10d:0:U",
-                		   "RRA:MAX:0.5:30:1",
-                		   "RRA:MAX:0.5:365:1",
-                		   "RRA:MAX:0.5:700:1",
-                		   "RRA:MIN:0.5:30:1",
-                		   "RRA:MIN:0.5:365:1",
-                		   "RRA:MIN:0.5:700:1",
-                		   "RRA:AVERAGE:0.5:30:1",
-                		   "RRA:AVERAGE:0.5:365:1",
-                		   "RRA:AVERAGE:0.5:700:1",
-                		  );
-				rrdinterface('create', $opts, $filename);
-			}
-			rrdinterface('update', array("N:$valore"), $filename);
-		break;
-		case 'numerositiipv6':
-			$filename .= "numerositiipv6-$idcategory.rrd";
-			if (!is_file($filename)) {
-				$opts = array( "--step 1d",
-				               "DS:numerositiipv6:GAUGE:10d:0:U",
-                		   "RRA:MAX:0.5:30:1",
-                		   "RRA:MAX:0.5:365:1",
-                		   "RRA:MAX:0.5:700:1",
-                		   "RRA:MIN:0.5:30:1",
-                		   "RRA:MIN:0.5:365:1",
-                		   "RRA:MIN:0.5:700:1",
-                		   "RRA:AVERAGE:0.5:30:1",
-                		   "RRA:AVERAGE:0.5:365:1",
-                		   "RRA:AVERAGE:0.5:700:1",
-                		  );
-				rrdinterface('create', $opts, $filename);
-			}
-			rrdinterface('update', array("N:$valore"), $filename);
-		break;
-		case 'ipv4univoci':
-			$filename .= "ipv4univoci-$idcategory.rrd";
-			if (!is_file($filename)) {
-				$opts = array( "--step 1d",
-				               "DS:ipv4univoci:GAUGE:10d:0:U",
-                		   "RRA:MAX:0.5:30:1",
-                		   "RRA:MAX:0.5:365:1",
-                		   "RRA:MAX:0.5:700:1",
-                		   "RRA:MIN:0.5:30:1",
-                		   "RRA:MIN:0.5:365:1",
-                		   "RRA:MIN:0.5:700:1",
-                		   "RRA:AVERAGE:0.5:30:1",
-                		   "RRA:AVERAGE:0.5:365:1",
-                		   "RRA:AVERAGE:0.5:700:1",
-                		  );
-				rrdinterface('create', $opts, $filename);
-			}
-			rrdinterface('update', array("N:$valore"), $filename);
-		break;
-		case 'conframe':
-			$filename .= "conframe-$idcategory.rrd";
-			if (!is_file($filename)) {
-				$opts = array( "--step 1d",
-				               "DS:conframe:GAUGE:10d:0:U",
-                		   "RRA:MAX:0.5:30:1",
-                		   "RRA:MAX:0.5:365:1",
-                		   "RRA:MAX:0.5:700:1",
-                		   "RRA:MIN:0.5:30:1",
-                		   "RRA:MIN:0.5:365:1",
-                		   "RRA:MIN:0.5:700:1",
-                		   "RRA:AVERAGE:0.5:30:1",
-                		   "RRA:AVERAGE:0.5:365:1",
-                		   "RRA:AVERAGE:0.5:700:1",
-                		  );
-				rrdinterface('create', $opts, $filename);
-			}
-			rrdinterface('update', array("N:$valore"), $filename);
-		break;
-	}
-}
 
 // ### END OF FILE ###

@@ -15,6 +15,7 @@
  * 20211206 aggiunta DNS, MX
  * 20211211 nocache, content type, hash ssl, organizzzione ssl
  * 20211226 merge admin+public e ristrutturazione albero directory
+ * 20211230 rimosso RRD
  *
  * This file is part of SESAE.
  *
@@ -75,26 +76,6 @@ define('CH_MX',             '005');	  // Mail Exchanger
 define('CH_CONTTYPE',       '006');	  // html content type
 define('CH_SSLHASH',        '007');	  // hash dei certificati ssl
 define('CH_SSLISSUER',      '008');	  // organizzazione emettitrice del certificato SSL
-
-// gruppi di storicizzazione
-define('ST_GEN_NUMEROSITI', 1);
-define('ST_GEN_NUMEROSITIHTTPS', 2);
-define('ST_GEN_NUMEROSITIIPV6', 3);
-define('ST_GEN_IPV4UNIVOCI', 4);
-define('ST_WEBSERVER', 5);
-define('ST_APACHEVER', 6);
-define('ST_APACHEOS', 7);
-define('ST_IISVER', 8);
-define('ST_POWERBY', 9);
-define('ST_PHPVER', 10);
-define('ST_COUNTRYIPV4', 11);
-define('ST_TLSCA', 12);
-define('ST_TLSHASH', 13);
-define('ST_CONTENTTYPE', 14);
-define('ST_AUTHDNS', 15);
-define('ST_MX', 16);
-define('ST_TLD', 17);
-define('ST_GENERATOR', 19);
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
