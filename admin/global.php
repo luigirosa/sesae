@@ -306,45 +306,69 @@ function cercaheader($a, $h) {
 
 
 /**
- * getcoutryipv4($ipv4, $cleancache = false)
+ * getipgeo($ip)
  * 
- * Resatituisce la nazione di un IPv4, gestendo la cache su SQL
+ * Restituisce la geolocalizzazione di un IP, gestendo la cache su SQL
+ * https://ip-api.com/
+ *
+ * 20211230 prima versione
  * 
  */
-function getcoutryipv4($ipv4, $cleancache = false) {
+function getipgeo($ip) {
 	global $db, $b2;
-	$retval = '';
-	if ($cleancache) {
-		// cleanup della cache di IP-nazione dopo 30 giorni
-		$primadi = time() - 2600000;
-		$db->query("DELETE FROM ipv4country WHERE ctime<$primadi");
+	$ttl = 2600000; // un mese suppergiu`
+	$retval = array();
+	if ('clearcache' == $ip) {
+		// cleanup dei record scaduti
+		$primadi = time() - $ttl;
+		$db->query("DELETE FROM ipcountrycache WHERE ctime<$primadi");
 	} else {
-		$ipv4sql = $b2->normalizza($ipv4, B2_NORM_SQL || B2_NORM_TRIM);
-		$q = $db->query("SELECT country FROM ipv4country WHERE ipv4='$ipv4sql'");
+		$ip = $b2->normalizza($ip, B2_NORM_SQL || B2_NORM_TRIM);		
+		$q = $db->query("SELECT * FROM ipcountrycache WHERE ip='$ip'");
+		$leggidaweb = true;
 		if ($q->num_rows > 0) {
 			$r = $q->fetch_array();
-			$retval = $r['country'];
-		} else {
+			if (($r['ctime'] + $ttl) > time()) { // se la cache non e` scaduta
+				$leggidaweb = false;
+				$retval = $r;
+			}
+		} 
+		if ($leggidaweb) {
+			$db->query("DELETE FROM ipcountrycache WHERE ip='$ip'");  // nel caso sia in cache e scaduto
+			$a = array();
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
-			curl_setopt($ch, CURLOPT_URL, "http://api.ipinfodb.com/v3/ip-country/?key=16b6c605daadb2ceb6f6c823acec109e942ce6cf72dd7ca88460badd2c8eb166&ip=$ipv4");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);  // ritorna il trasferimento come stringa
+			curl_setopt($ch, CURLOPT_URL, "http://ip-api.com/json/$ip?fields=22076931");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  // ritorna il trasferimento come stringa
 			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			$json = curl_exec($ch);
 			curl_close($ch);
-			$alocation = explode(';', $json);
-			$country = trim($alocation[3]);
-			if ('' != $country) {
-				$db->query("INSERT INTO ipv4country SET ipv4='$ipv4sql',country='" . $b2->normalizza($country, B2_NORM_SQL || B2_NORM_TRIM) . "',ctime=UNIX_TIMESTAMP()");
-				$retval = $country;
+			$ret = json_decode($json);
+			if ('success' == $ret->status) {
+				$a[] = $b2->campoSQL("ip", $ip);
+				$a[] = $b2->campoSQL("ctime", time());
+				if (isset($ret->continent))   {$a[] = $b2->campoSQL("continent",   $ret->continent);   $retval['continent']   = $ret->continent;}
+				if (isset($ret->country))     {$a[] = $b2->campoSQL("country",     $ret->country);     $retval['country']     = $ret->country;}
+				if (isset($ret->countryCode)) {$a[] = $b2->campoSQL("countrycode", $ret->countryCode); $retval['countrycode'] = $ret->countryCode;}
+				if (isset($ret->isp))         {$a[] = $b2->campoSQL("isp",         $ret->isp);         $retval['isp']         = $ret->isp;}
+				if (isset($ret->org))         {$a[] = $b2->campoSQL("org",         $ret->org);         $retval['org']         = $ret->org;}
+				if (isset($ret->as))          {$a[] = $b2->campoSQL("as",          $ret->as);          $retval['as']          = $ret->as;}
+				if (isset($ret->asname))      {$a[] = $b2->campoSQL("asname",      $ret->asname);      $retval['asname']      = $ret->asname;}
+				if (isset($ret->hosting)) {
+					$hosting = $ret->hosting == 'true' ? 1 : 0;
+					$a[] = $b2->campoSQL("ishosting", $hosting);
+					$retval['ishosting'] = $hosting;
+				}
+				$db->query("INSERT INTO ipcountrycache SET " . implode(',', $a));
+				print_r("INSERT INTO ipcountrycache SET " . implode(',', $a));
 			} else {
-				$retval = '--';
+				error_log("grtipgeo() IP $ip - " . $ret->message);
 			}
 		}
 	}
 	return $retval;
 }
+
 
 /**
  * aggiornacampo($idtarget, $campo, $valore)
@@ -696,8 +720,8 @@ function scantarget($idtarget, $idprobe = 0) {
 		}
 		aggiornacampo($idtarget, 'ipv4', $ipv4);
 		aggiornacampo($idtarget, 'ipv4cname', $ipv4cname);
-		$ipv4country = isset($adns->answer[0]->address) ? getcoutryipv4($ipv4) : '';
-		aggiornacampo($idtarget, 'ipv4country', $ipv4country);
+		$aipv4geo = isset($adns->answer[0]->address) ? getipgeo($ipv4) : '';
+		if (isset($aipv4geo['countrycode'])) aggiornacampo($idtarget, 'ipv4country', $aipv4geo['countrycode']);
 		// IPv6
   	$aipv6 = $dns2->query($r['hostname'], 'AAAA');
 		if (isset($aipv6->answer[0])) {

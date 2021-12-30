@@ -40,7 +40,7 @@ define('SKIPCHECK', TRUE);
 require('../admin/global.php');
 
 // cancello la cache degli IPv4 (dopo)
-//getcoutryipv4('1.1.1.1', true);
+getipgeo('clearcache');
 
 //
 // Storicizzazione
