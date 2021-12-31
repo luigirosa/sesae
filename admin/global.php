@@ -717,7 +717,7 @@ function scantarget($idtarget, $idprobe = 0) {
 		if (isset($adns->answer[0]->cname)) {
 			$ipv4cname = substr(trim($adns->answer[0]->cname), 0, 250);
 			$ipv4 = isset($adns->answer[1]->address) ? $adns->answer[1]->address : '';
-			$ipv4 = substr(trim($ipv4), 0, 15);
+			$ipv4 = trim($ipv4);
 		} else {
 			$ipv4cname = '';
 		}
@@ -736,7 +736,7 @@ function scantarget($idtarget, $idprobe = 0) {
 			if (isset($aipv6->answer[0]->cname)) {
 				$ipv6cname = substr(trim($aipv6->answer[0]->cname), 0, 250);
 				$ipv6 = isset($aipv6->answer[1]->address) ? $aipv6->answer[1]->address : '';
-				$ipv6 = substr(trim($ipv6), 0, 15);
+				$ipv6 = trim($ipv6);
 			} else {
 				$ipv6cname = '';
 			}
@@ -1363,15 +1363,10 @@ function getipid($ip) {
 		if (isset($aipinfo['org']))         $a[] = $b2->campoSQL("org",         $aipinfo['org']);
 		if (isset($aipinfo['as']))          $a[] = $b2->campoSQL("as",          $aipinfo['as']);
 		if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
-		if (isset($aipinfo['hosting'])) {
-			$hosting = $aipinfo['hosting'] == 'true' ? 1 : 0;
-			$a[] = $b2->campoSQL("ishosting", $hosting);
-		}
-print_r("\nUPDATE ip SET " . implode(',', $a) . "WHERE idip='$r[idip]'\n");
+		if (isset($aipinfo['ishosting']))   $a[] = $b2->campoSQL("ishosting",   $aipinfo['ishosting']);
 		$db->query("UPDATE ip SET " . implode(',', $a) . "WHERE idip='$r[idip]'");
 	} else { // tocca andarlo a cercare
 		$aipinfo = getipgeo($ip);
-print_r($aipinfo);
 		if (!empty($aipinfo)) {
 			$a = array();
 			$a[] = $b2->campoSQL("ip", $ip);
@@ -1382,11 +1377,7 @@ print_r($aipinfo);
 			if (isset($aipinfo['org']))         $a[] = $b2->campoSQL("org",         $aipinfo['org']);
 			if (isset($aipinfo['as']))          $a[] = $b2->campoSQL("as",          $aipinfo['as']);
 			if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
-			if (isset($aipinfo['hosting'])) {
-				$hosting = $aipinfo['hosting'] == 'true' ? 1 : 0;
-				$a[] = $b2->campoSQL("ishosting", $hosting);
-			}
-print_r("\nINSERT INTO ip SET " . implode(',', $a) . "\n");
+			if (isset($aipinfo['ishosting']))   $a[] = $b2->campoSQL("ishosting",   $aipinfo['ishosting']);
 			$db->query("INSERT INTO ip SET " . implode(',', $a));
 			$retval = $db->insert_id;
 		}
