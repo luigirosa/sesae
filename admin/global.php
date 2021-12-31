@@ -42,7 +42,7 @@
 //error_reporting ( E_ALL );
 //ini_set ( "display_errors", 'on' );
 
-define('SESAE_VERSION', "2021123101");
+define('SESAE_VERSION', "2021123102");
 
 if(!defined('SESAE')) {
 	header ('Location: https://www.google.com');
@@ -352,8 +352,18 @@ function getipgeo($ip) {
 				if (isset($ret->countryCode)) {$a[] = $b2->campoSQL("countrycode", $ret->countryCode); $retval['countrycode'] = $ret->countryCode;}
 				if (isset($ret->isp))         {$a[] = $b2->campoSQL("isp",         $ret->isp);         $retval['isp']         = $ret->isp;}
 				if (isset($ret->org))         {$a[] = $b2->campoSQL("org",         $ret->org);         $retval['org']         = $ret->org;}
-				if (isset($ret->as))          {$a[] = $b2->campoSQL("as",          $ret->as);          $retval['as']          = $ret->as;}
 				if (isset($ret->asname))      {$a[] = $b2->campoSQL("asname",      $ret->asname);      $retval['asname']      = $ret->asname;}
+				if (isset($ret->as)) {
+					list($as,$asowner) = explode(' ', $ret->as, 2);
+					$as = trim($as);
+					$a[] = $b2->campoSQL("as", $as);
+					$retval['as'] = $as;
+					$asowner = trim($asowner);
+					$a[] = $b2->campoSQL("asowner", $asowner);
+					$retval['asowner'] = $asowner;
+				}
+				
+				
 				if (isset($ret->hosting)) {
 					$hosting = $ret->hosting == 'true' ? 1 : 0;
 					$a[] = $b2->campoSQL("ishosting", $hosting);
@@ -818,7 +828,7 @@ function scantarget($idtarget, $idprobe = 0) {
       $html_title = preg_replace('/\s+/', ' ', $title_matches[1]);
 			aggiornacampo($idtarget, 'html_title', $html_title);
 		} else {
-			aggiornacampo($idtarget, '', $html_title);
+			aggiornacampo($idtarget, 'html_title', '');
 		}
 		// meta
 		$dom = new DOMDocument;
@@ -1362,6 +1372,7 @@ function getipid($ip) {
 		if (isset($aipinfo['isp']))         $a[] = $b2->campoSQL("isp",         $aipinfo['isp']);
 		if (isset($aipinfo['org']))         $a[] = $b2->campoSQL("org",         $aipinfo['org']);
 		if (isset($aipinfo['as']))          $a[] = $b2->campoSQL("as",          $aipinfo['as']);
+		if (isset($aipinfo['asowner']))     $a[] = $b2->campoSQL("asowner",     $aipinfo['asowner']);
 		if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
 		if (isset($aipinfo['ishosting']))   $a[] = $b2->campoSQL("ishosting",   $aipinfo['ishosting']);
 		$db->query("UPDATE ip SET " . implode(',', $a) . "WHERE idip='$r[idip]'");
@@ -1376,6 +1387,7 @@ function getipid($ip) {
 			if (isset($aipinfo['isp']))         $a[] = $b2->campoSQL("isp",         $aipinfo['isp']);
 			if (isset($aipinfo['org']))         $a[] = $b2->campoSQL("org",         $aipinfo['org']);
 			if (isset($aipinfo['as']))          $a[] = $b2->campoSQL("as",          $aipinfo['as']);
+			if (isset($aipinfo['asowner']))     $a[] = $b2->campoSQL("asowner",     $aipinfo['asowner']);
 			if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
 			if (isset($aipinfo['ishosting']))   $a[] = $b2->campoSQL("ishosting",   $aipinfo['ishosting']);
 			$db->query("INSERT INTO ip SET " . implode(',', $a));
