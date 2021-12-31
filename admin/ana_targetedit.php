@@ -18,6 +18,7 @@
  * 20200614 basta log
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20211227 aggiunta campo id univoco esterno
+ * 20211231 nuova gestione IP
  *
  * This file is part of SESAE.
  *
@@ -240,6 +241,7 @@ echo "\n</form>";
 
 if ($idtarget > 0) {
 	// dati
+	$rt = $r; // e' l'array di target, majalata, ma faccio prima che non ho voglia di cambiare il codice
 	$r = $db->query("SELECT * FROM targetdata WHERE idtarget='$idtarget'")->fetch_array();
 	$rr = $db->query("SELECT * FROM targetraw WHERE idtarget='$idtarget'")->fetch_array();
 	$rs = $db->query("SELECT * FROM http_server WHERE idtarget='$idtarget'")->fetch_array();
@@ -274,11 +276,6 @@ if ($idtarget > 0) {
 	if ('' != trim($r['goog_analytics'])) echo $b2->rigaEdit('Google Analytics', $r['goog_analytics']);
 	if ('' != trim($r['goog_asy'])) echo $b2->rigaEdit('Google Analytics Asy', $r['goog_asy']);
 	if ('' != trim($r['goog_tag'])) echo $b2->rigaEdit('Google Tag Manager', $r['goog_tag']);
-	echo $b2->rigaEdit('IPv4', $r['ipv4']);
-	if ('' != trim($r['ipv4host'])) echo $b2->rigaEdit('Host IPv4', $r['ipv4host']);
-	if ('' != trim($r['ipv4country'])) echo $b2->rigaEdit('IPv4 country', $r['ipv4country']);
-	if ('' != trim($r['ipv6'])) echo $b2->rigaEdit('IPv6', $r['ipv6']);
-	if ('' != trim($r['ipv6host'])) echo $b2->rigaEdit('Host IPv6', $r['ipv6host']);
 	if ('' != trim($r['http_contenttype'])) echo $b2->rigaEdit('HTTP content type', $r['http_contenttype']);
 	if (isset($rs) and '' != trim($rs['http_server'])) echo $b2->rigaEdit('HTTP server', "$rs[http_server] ($rs[http_server_stat])");
 	// powered by
@@ -306,6 +303,30 @@ if ($idtarget > 0) {
 		echo $b2->rigaEdit('Scadenza certificato', date('j/n/Y h:i', $r['https_validto']));
 		echo $b2->rigaEdit('Firma certificato', $r['https_signature']);
 	}
+	echo "\n</table>";
+	// IP
+	echo "\n<table border='0' align='center'>";
+	echo "\n<tr><td>&nbsp;</td><td align='center'><b>IPv4</b></td><td align='center'><b>IPv6</b></td></tr>";
+	if ($rt['idipv4'] > 0) {
+		$ripv4 = $db->query("SELECT * FROM ip WHERE idip='$rt[idipv4]'")->fetch_array();
+	} else {
+		$ripv4 = array();
+	}
+	if ($rt['idipv6'] > 0) {
+		$ripv6 = $db->query("SELECT * FROM ip WHERE idip='$rt[idipv6]'")->fetch_array();
+	} else {
+		$ripv6 = array();
+	}
+	$ishosting4 = $ripv4['ishosting'] == 1 ? 'S&igrave;' : 'No';
+	$ishosting6 = $ripv6['ishosting'] == 1 ? 'S&igrave;' : 'No';
+	echo "\n<tr><td align='left'><b>IP</b></td><td align='left'>$ripv4[ip]</td><td align='left'>$ripv6[ip]</td></tr>";
+	echo "\n<tr><td align='left'><b>Host</b></td><td align='left'>$r[ipv4host]</td><td align='right'>$r[ipv6host]</td></tr>";
+	echo "\n<tr><td align='left'><b>Reverse</b></td><td align='left'>$ripv4[reverse]</td><td align='left'>$ripv6[reverse]</td></tr>";
+	echo "\n<tr><td align='left'><b>Country</b></td><td align='left'>$ripv4[countrycode] $ripv4[country] $ripv4[continent]</td><td align='left'>$ripv6[countrycode] $ripv6[country] $ripv6[continent]</td></tr>";
+	echo "\n<tr><td align='left'><b>Organizzazione</b></td><td align='left'>$ripv4[org]</td><td align='left'>$ripv6[org]</td></tr>";
+	echo "\n<tr><td align='left'><b>ISP</b></td><td align='left'>$ripv4[isp]</td><td align='left'>$ripv6[isp]</td></tr>";
+	echo "\n<tr><td align='left'><b>AS</b></td><td align='left'>$ripv4[as] $ripv4[asname] $ripv4[asowner]</td><td align='left'>$ripv6[as] $ripv6[asname] $ripv6[asowner]</td></tr>";
+	echo "\n<tr><td align='left'><b>IP in hosting?</b></td><td align='left'>$ishosting4</td><td align='left'>$ishosting6</td></tr>";
 	echo "\n</table>";
 	// campo hidden per la copia del valore
 	echo "\n" . $b2->inputhidden('redirected',  $r['http_location']);
