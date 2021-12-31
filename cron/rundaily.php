@@ -67,7 +67,9 @@ $r = $db->query("SELECT COUNT(*)
 				         JOIN ip ON target.idipv6=ip.idip")->fetch_array();
 storicizza($today, 0, ST_GEN_CONIPV6, $r[0]);
 // ipv4univoci
-$r = $db->query("SELECT COUNT(DISTINCT ipv4) FROM targetdata")->fetch_array();
+$r = $db->query("SELECT COUNT(DISTINCT ip.idip) 
+                 FROM target
+                 JOIN ip ON target.idipv4=ip.idip")->fetch_array();
 storicizza($today, 0, ST_GEN_IPV4UNIVOCI, $r[0]);
 // conframe
 $r = $db->query("SELECT COUNT(*)
@@ -159,21 +161,21 @@ while ($rr = $qq->fetch_array()) {
 	$r = $db->query("SELECT COUNT(*) FROM target WHERE enabled='1' AND idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_NUMEROSITI, $r[0]);
 	// numerositihttps
+	$r = $db->query("SELECT COUNT(*)
+	                 FROM target 
+	                 JOIN targetdata ON targetdata.idtarget=target.idtarget
+	                 WHERE targetdata.ishttps='1' AND target.idcategory='$rr[idcategory]'")->fetch_array();
+	storicizza($today, $rr['idcategory'], ST_GEN_INHTTPS, $r[0]);
+	// numerositiipv6
 	$r = $db->query("SELECT COUNT(*) 
 				           FROM target
 				           JOIN ip ON target.idipv6=ip.idip
 	                 WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
-	storicizza($today, $rr['idcategory'], ST_GEN_INHTTPS, $r[0]);
-	// numerositiipv6
-	$r = $db->query("SELECT COUNT(*)
-	                 FROM target 
-	                 JOIN targetdata ON targetdata.idtarget=target.idtarget
-	                 WHERE targetdata.ipv6<>'' AND target.idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_CONIPV6, $r[0]);
 	// ipv4univoci
-	$r = $db->query("SELECT COUNT(DISTINCT ipv4) 
-	                 FROM targetdata 
-	                 JOIN target ON targetdata.idtarget=target.idtarget
+	$r = $db->query("SELECT COUNT(DISTINCT ip.idip) 
+                   FROM target
+                   JOIN ip ON target.idipv4=ip.idip
 	                 WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_IPV4UNIVOCI, $r[0]);
 	// conframe

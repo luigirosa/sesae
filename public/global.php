@@ -119,7 +119,10 @@ function cache_dati($quale, $nocache = '') {
 				                 $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>Con IPv6</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// ipv4 univoci
-				$r = $db->query("SELECT COUNT(DISTINCT ipv4) FROM targetdata JOIN target ON targetdata.idtarget = target.idtarget $whw")->fetch_array();
+				$r = $db->query("SELECT COUNT(DISTINCT ip.idip) 
+				                 FROM target
+				                 JOIN ip ON target.idipv4=ip.idip 
+				                 $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>IPv4 univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// frame
 				$r = $db->query("SELECT COUNT(*)
