@@ -353,6 +353,7 @@ function getipgeo($ip) {
 				if (isset($ret->isp))         {$a[] = $b2->campoSQL("isp",         $ret->isp);         $retval['isp']         = $ret->isp;}
 				if (isset($ret->org))         {$a[] = $b2->campoSQL("org",         $ret->org);         $retval['org']         = $ret->org;}
 				if (isset($ret->asname))      {$a[] = $b2->campoSQL("asname",      $ret->asname);      $retval['asname']      = $ret->asname;}
+				if (isset($ret->reverse))     {$a[] = $b2->campoSQL("reverse",     $ret->reverse);     $retval['reverse']     = $ret->reverse;}
 				if (isset($ret->as)) {
 					list($as,$asowner) = explode(' ', $ret->as, 2);
 					$as = trim($as);
@@ -1375,6 +1376,7 @@ function getipid($ip) {
 		if (isset($aipinfo['asowner']))     $a[] = $b2->campoSQL("asowner",     $aipinfo['asowner']);
 		if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
 		if (isset($aipinfo['ishosting']))   $a[] = $b2->campoSQL("ishosting",   $aipinfo['ishosting']);
+		if (isset($aipinfo['reverse']))     $a[] = $b2->campoSQL("reverse",     $aipinfo['reverse']);
 		$db->query("UPDATE ip SET " . implode(',', $a) . "WHERE idip='$r[idip]'");
 	} else { // tocca andarlo a cercare
 		$aipinfo = getipgeo($ip);
@@ -1390,6 +1392,7 @@ function getipid($ip) {
 			if (isset($aipinfo['asowner']))     $a[] = $b2->campoSQL("asowner",     $aipinfo['asowner']);
 			if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
 			if (isset($aipinfo['ishosting']))   $a[] = $b2->campoSQL("ishosting",   $aipinfo['ishosting']);
+			if (isset($aipinfo['reverse']))     $a[] = $b2->campoSQL("reverse",     $aipinfo['reverse']);
 			$db->query("INSERT INTO ip SET " . implode(',', $a));
 			$retval = $db->insert_id;
 		}
