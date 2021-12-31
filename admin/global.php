@@ -42,7 +42,7 @@
 //error_reporting ( E_ALL );
 //ini_set ( "display_errors", 'on' );
 
-define('SESAE_VERSION', "2021122601");
+define('SESAE_VERSION', "2021123101");
 
 if(!defined('SESAE')) {
 	header ('Location: https://www.google.com');
@@ -360,7 +360,6 @@ function getipgeo($ip) {
 					$retval['ishosting'] = $hosting;
 				}
 				$db->query("INSERT INTO ipcountrycache SET " . implode(',', $a));
-				print_r("INSERT INTO ipcountrycache SET " . implode(',', $a));
 			} else {
 				error_log("grtipgeo() IP $ip - " . $ret->message);
 			}
@@ -392,11 +391,19 @@ function aggiornacampo($idtarget, $campo, $valore) {
 		break;
 		case 'ipv6':
 			$valore = trim(strtolower($valore));
-			$db->query("UPDATE targetdata SET ipv6='" . $b2->normalizza($valore) . "' WHERE idtarget='$idtarget'");
+			$idipv6 = 0;
+			if ('' != $valore) {
+				$idipv6 = getipid($valore);
+			} 
+			$db->query("UPDATE target SET idipv6='" . $b2->normalizza($idipv6) . "' WHERE idtarget='$idtarget'");
 		break;
 		case 'ipv4':
 			$valore = trim($valore);
-			$db->query("UPDATE targetdata SET ipv4='" . $b2->normalizza($valore) . "' WHERE idtarget='$idtarget'");
+			$idipv4 = 0;
+			if ('' != $valore) {
+				$idipv4 = getipid($valore);
+			} 
+			$db->query("UPDATE target SET idipv4='" . $b2->normalizza($idipv4) . "' WHERE idtarget='$idtarget'");
 		break;
 		case 'head':
 			$db->query("UPDATE targetdata SET head='" . $b2->normalizza($valore, B2_NORM_TRIM || B2_NORM_SQL) . "' WHERE idtarget='$idtarget'");
@@ -466,10 +473,6 @@ function aggiornacampo($idtarget, $campo, $valore) {
 			$valore = trim(str_replace(array("\n", "\t", "\r"), ' ', $valore));
 			$valore = trim(str_replace('  ', ' ', $valore));
 			$db->query("UPDATE targetdata SET html_title='" . $b2->normalizza($valore) . "' WHERE idtarget='$idtarget'");
-		break;
-		case 'ipv4country':
-			$valore = trim(strtoupper($valore));
-			$db->query("UPDATE targetdata SET ipv4country='" . $b2->normalizza($valore) . "' WHERE idtarget='$idtarget'");
 		break;
 		case 'ishttps':
 			$db->query("UPDATE targetdata SET ishttps='" . $b2->normalizza($valore) . "' WHERE idtarget='$idtarget'");
@@ -720,8 +723,6 @@ function scantarget($idtarget, $idprobe = 0) {
 		}
 		aggiornacampo($idtarget, 'ipv4', $ipv4);
 		aggiornacampo($idtarget, 'ipv4cname', $ipv4cname);
-		$aipv4geo = isset($adns->answer[0]->address) ? getipgeo($ipv4) : '';
-		if (isset($aipv4geo['countrycode'])) aggiornacampo($idtarget, 'ipv4country', $aipv4geo['countrycode']);
 		// IPv6
   	$aipv6 = $dns2->query($r['hostname'], 'AAAA');
 		if (isset($aipv6->answer[0])) {
@@ -1334,6 +1335,63 @@ function storicizza($data, $idcategory, $idcampostorico, $valoreint=0, $valorest
 	$a[] =	$b2->campoSQL("valoreint", $valoreint);
 	$a[] =	$b2->campoSQL("valorestr", $valorestr, B2_NORM_SQL || B2_NORM_TRIM);
 	$db->query("INSERT INTO storico SET " . implode(',', $a));
+}
+
+
+/**
+ * getipid($ip)
+ * 
+ * Ritorna l'id di un IP nella tabella degli IP
+ *
+ * 20211231 prima versione
+ * 
+ */
+function getipid($ip) {
+	global $db,$b2;
+	$retval = 0;
+	$q = $db->query("SELECT idip FROM ip WHERE ip='" . $b2->normalizza($ip) ."'");
+	if ($q->num_rows > 0) {
+		$r = $q->fetch_array();
+		$retval = $r['idip'];
+		// aggiorno i dati, semmai siano cambiati
+		$aipinfo = getipgeo($ip);
+		$a = array();
+		if (isset($aipinfo['continent']))   $a[] = $b2->campoSQL("continent",   $aipinfo['continent']);
+		if (isset($aipinfo['country']))     $a[] = $b2->campoSQL("country",     $aipinfo['country']);
+		if (isset($aipinfo['countrycode'])) $a[] = $b2->campoSQL("countrycode", $aipinfo['countrycode']);
+		if (isset($aipinfo['isp']))         $a[] = $b2->campoSQL("isp",         $aipinfo['isp']);
+		if (isset($aipinfo['org']))         $a[] = $b2->campoSQL("org",         $aipinfo['org']);
+		if (isset($aipinfo['as']))          $a[] = $b2->campoSQL("as",          $aipinfo['as']);
+		if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
+		if (isset($aipinfo['hosting'])) {
+			$hosting = $aipinfo['hosting'] == 'true' ? 1 : 0;
+			$a[] = $b2->campoSQL("ishosting", $hosting);
+		}
+print_r("\nUPDATE ip SET " . implode(',', $a) . "WHERE idip='$r[idip]'\n");
+		$db->query("UPDATE ip SET " . implode(',', $a) . "WHERE idip='$r[idip]'");
+	} else { // tocca andarlo a cercare
+		$aipinfo = getipgeo($ip);
+print_r($aipinfo);
+		if (!empty($aipinfo)) {
+			$a = array();
+			$a[] = $b2->campoSQL("ip", $ip);
+			if (isset($aipinfo['continent']))   $a[] = $b2->campoSQL("continent",   $aipinfo['continent']);
+			if (isset($aipinfo['country']))     $a[] = $b2->campoSQL("country",     $aipinfo['country']);
+			if (isset($aipinfo['countrycode'])) $a[] = $b2->campoSQL("countrycode", $aipinfo['countrycode']);
+			if (isset($aipinfo['isp']))         $a[] = $b2->campoSQL("isp",         $aipinfo['isp']);
+			if (isset($aipinfo['org']))         $a[] = $b2->campoSQL("org",         $aipinfo['org']);
+			if (isset($aipinfo['as']))          $a[] = $b2->campoSQL("as",          $aipinfo['as']);
+			if (isset($aipinfo['asname']))      $a[] = $b2->campoSQL("asname",      $aipinfo['asname']);
+			if (isset($aipinfo['hosting'])) {
+				$hosting = $aipinfo['hosting'] == 'true' ? 1 : 0;
+				$a[] = $b2->campoSQL("ishosting", $hosting);
+			}
+print_r("\nINSERT INTO ip SET " . implode(',', $a) . "\n");
+			$db->query("INSERT INTO ip SET " . implode(',', $a));
+			$retval = $db->insert_id;
+		}
+	}
+	return($retval);
 }
 
 
