@@ -113,10 +113,10 @@ function cache_dati($quale, $nocache = '') {
 		                     WHERE targetdata.ishttps='1' $wha")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>HTTPS</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				//ipv6
-				$r = $db->query("SELECT COUNT(*)
-                         FROM target 
-	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
-		                     WHERE targetdata.ipv6<>'' $wha")->fetch_array();
+				$r = $db->query("SELECT COUNT(*) 
+				                 FROM target
+				                 JOIN ip ON target.idipv6=ip.idip 
+				                 $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>Con IPv6</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// ipv4 univoci
 				$r = $db->query("SELECT COUNT(DISTINCT ipv4) FROM targetdata JOIN target ON targetdata.idtarget = target.idtarget $whw")->fetch_array();

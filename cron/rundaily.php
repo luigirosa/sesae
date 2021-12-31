@@ -40,7 +40,7 @@ define('SKIPCHECK', TRUE);
 require('../admin/global.php');
 
 // cancello la cache degli IPv4 (dopo)
-getipgeo('clearcache');
+//getcoutryipv4('1.1.1.1', true);
 
 //
 // Storicizzazione
@@ -62,10 +62,9 @@ $r = $db->query("SELECT COUNT(*)
                  WHERE targetdata.ishttps='1'")->fetch_array();
 storicizza($today, 0, ST_GEN_INHTTPS, $r[0]);
 // numerositiipv6
-$r = $db->query("SELECT COUNT(*)
-                 FROM target 
-                 JOIN targetdata ON targetdata.idtarget=target.idtarget
-                 WHERE targetdata.ipv6<>''")->fetch_array();
+$r = $db->query("SELECT COUNT(*) 
+				         FROM target
+				         JOIN ip ON target.idipv6=ip.idip")->fetch_array();
 storicizza($today, 0, ST_GEN_CONIPV6, $r[0]);
 // ipv4univoci
 $r = $db->query("SELECT COUNT(DISTINCT ipv4) FROM targetdata")->fetch_array();
@@ -160,10 +159,10 @@ while ($rr = $qq->fetch_array()) {
 	$r = $db->query("SELECT COUNT(*) FROM target WHERE enabled='1' AND idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_NUMEROSITI, $r[0]);
 	// numerositihttps
-	$r = $db->query("SELECT COUNT(*)
-	                 FROM target 
-	                 JOIN targetdata ON targetdata.idtarget=target.idtarget
-	                 WHERE targetdata.ishttps='1' AND target.idcategory='$rr[idcategory]'")->fetch_array();
+	$r = $db->query("SELECT COUNT(*) 
+				           FROM target
+				           JOIN ip ON target.idipv6=ip.idip
+	                 WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_INHTTPS, $r[0]);
 	// numerositiipv6
 	$r = $db->query("SELECT COUNT(*)
