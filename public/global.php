@@ -78,7 +78,7 @@ define('CH_SSLHASH',        '007');	  // hash dei certificati ssl
 define('CH_SSLISSUER',      '008');	  // organizzazione emettitrice del certificato SSL
 define('CH_COUNTRYIPV4',    '009');	  // Country IPv4
 define('CH_COUNTRYIPV6',    '010');	  // Country IPv6
-define('CH_POWEREDBY',    '011');	  // Country IPv6
+define('CH_POWEREDBY',      '011');	  // Country IPv6
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
@@ -286,6 +286,28 @@ function cache_dati($quale, $nocache = '') {
 				$b .= "\n<!-- CH_SSLISSUER "	. date("j/n/Y G:i:s") . " -->\n";
 				file_put_contents($cachefile, $b);
 			break;
+			// Country IPv4
+			case CH_COUNTRYIPV4:
+				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
+				$whw = $idcategory == 0 ? '' : " WHERE target.idcategory='$idcategory'";
+				$t = $db->query("SELECT COUNT(*) FROM target JOIN targetdata ON targetdata.idtarget=target.idtarget WHERE targetdata.ishttps='1' $wha")->fetch_array();
+				$b .= "\n<table border='0' align='center'>";
+				$b .= "\n<tr><td align='center' colspan='3'><h2>Country IPv4</h2></td></tr>";
+				$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode,iso3166a2.stato
+				                 FROM target 
+				                 JOIN ip ON target.idipv4=ip.idip
+				                 JOIN iso3166a2 ON ip.countrycode=iso3166a2.iso
+				                 $whw
+				                 GROUP BY ip.countrycode
+				                 HAVING c>=10
+				                 ORDER BY c DESC");
+				while ($r = $q->fetch_array()) {
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[stato]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
+				}
+				$b.= "\n</table>";
+				$b .= "\n<!-- CH_COUNTRYIPV4 "	. date("j/n/Y G:i:s") . " -->\n";
+				file_put_contents($cachefile, $b);
+			break;
 			// Country IPv6
 			case CH_COUNTRYIPV6:
 				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
@@ -322,7 +344,7 @@ function cache_dati($quale, $nocache = '') {
 				                 HAVING c>=10
 				                 ORDER BY c DESC,poweredby");
 				while ($r = $q->fetch_array()) {
-					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[poweredby]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[poweredby_stat_fam]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_POWEREDBY "	. date("j/n/Y G:i:s") . " -->\n";
