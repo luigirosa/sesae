@@ -162,6 +162,17 @@ $q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode
 while ($r = $q->fetch_array()) {
 	storicizza($today, 0, ST_COUNTRYIPV4, $r['c'], $r['countrycode']);
 }
+// country IPv6
+$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_COUNTRYIPV6)->fetch_array();
+$limiteminimo = $r[0];
+$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode
+				         FROM target 
+				         JOIN ip on target.idipv6=ip.idip
+				         GROUP BY ip.countrycode
+				         HAVING c>=$limiteminimo");
+while ($r = $q->fetch_array()) {
+	storicizza($today, 0, ST_COUNTRYIPV6, $r['c'], $r['countrycode']);
+}
 
 
 
@@ -291,6 +302,18 @@ while ($rr = $qq->fetch_array()) {
 					         HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
 		storicizza($today, $rr['idcategory'], ST_COUNTRYIPV4, $r['c'], $r['countrycode']);
+	}
+	// country IPv6
+	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_COUNTRYIPV6)->fetch_array();
+	$limiteminimo = $r[0];
+	$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode
+					         FROM target 
+					         JOIN ip on target.idipv6=ip.idip
+					         WHERE target.idcategory='$rr[idcategory]'
+					         GROUP BY ip.countrycode
+					         HAVING c>=$limiteminimo");
+	while ($r = $q->fetch_array()) {
+		storicizza($today, $rr['idcategory'], ST_COUNTRYIPV6, $r['c'], $r['countrycode']);
 	}
 
 }
