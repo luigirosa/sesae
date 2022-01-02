@@ -279,10 +279,10 @@ if ($idtarget > 0) {
 	if ('' != trim($r['http_contenttype'])) echo $b2->rigaEdit('HTTP content type', $r['http_contenttype']);
 	if (isset($rs) and '' != trim($rs['http_server'])) echo $b2->rigaEdit('HTTP server', "$rs[http_server] ($rs[http_server_stat])");
 	// powered by
-	$qp = $db->query("SELECT poweredby FROM poweredby WHERE idtarget='$idtarget'");
+	$qp = $db->query("SELECT * FROM poweredby WHERE idtarget='$idtarget'");
 	if ($qp->num_rows > 0) {
 		$rp = $qp->fetch_array();
-		echo $b2->rigaEdit('Powered by', $rp['poweredby']);
+		echo $b2->rigaEdit('Powered by', "$rp[poweredby] | $rp[poweredby_stat] | $rp[poweredby_stat_fam]");
 	}
 	// generator
 	$qx = $db->query("SELECT * FROM http_generator WHERE idtarget='$idtarget'");
@@ -320,7 +320,7 @@ if ($idtarget > 0) {
 	$ishosting4 = $ripv4['ishosting'] == 1 ? 'S&igrave;' : 'No';
 	$ishosting6 = $ripv6['ishosting'] == 1 ? 'S&igrave;' : 'No';
 	echo "\n<tr><td align='left'><b>IP</b></td><td align='left'>$ripv4[ip]</td><td align='left'>$ripv6[ip]</td></tr>";
-	echo "\n<tr><td align='left'><b>Host</b></td><td align='left'>$r[ipv4host]</td><td align='right'>$r[ipv6host]</td></tr>";
+	echo "\n<tr><td align='left'><b>Host</b></td><td align='left'>$r[ipv4host]</td><td align='left'>$r[ipv6host]</td></tr>";
 	echo "\n<tr><td align='left'><b>Reverse</b></td><td align='left'>$ripv4[reverse]</td><td align='left'>$ripv6[reverse]</td></tr>";
 	echo "\n<tr><td align='left'><b>Country</b></td><td align='left'>$ripv4[countrycode] $ripv4[country] $ripv4[continent]</td><td align='left'>$ripv6[countrycode] $ripv6[country] $ripv6[continent]</td></tr>";
 	echo "\n<tr><td align='left'><b>Organizzazione</b></td><td align='left'>$ripv4[org]</td><td align='left'>$ripv6[org]</td></tr>";

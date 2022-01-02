@@ -12,6 +12,7 @@
  * 
  * 20211205 prima versione
  * 20211206 modifica gestione MX
+ * 20220102 Powered by
  *
  * This file is part of SESAE.
  *
@@ -80,6 +81,9 @@ switch ($gruppo) {
 	break;
 	case 'HTS':
 		$qry = "SELECT http_server AS a FROM http_server";
+	break;
+	case 'PWR':
+		$qry = "SELECT poweredby AS a FROM poweredby";
 	break;
 }
 

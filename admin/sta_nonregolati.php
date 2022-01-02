@@ -12,6 +12,7 @@
  * 
  * 20211205 prima versione
  * 20211206 modifica gestione MX
+ * 20220102 Powered by
  *
  * This file is part of SESAE.
  *
@@ -90,6 +91,13 @@ switch ($gruppo) {
 		          FROM http_server 
 		          GROUP BY http_server 
 		          ORDER BY http_server";
+		$secondocampo = true;
+	break;
+	case 'PWR':
+		$qry01 = "SELECT idpoweredby AS id,poweredby AS daregolare,poweredby_stat,COUNT(poweredby_stat) AS c 
+		          FROM poweredby 
+		          GROUP BY poweredby 
+		          ORDER BY poweredby";
 		$secondocampo = true;
 	break;
 }
