@@ -177,7 +177,8 @@ while ($r = $q->fetch_array()) {
 $r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_POWEREDBY)->fetch_array();
 $limiteminimo = $r[0];
 $q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam 
-				         FROM poweredby  
+				         FROM poweredby
+				         WHERE poweredby_stat_fam<>''  
 				         GROUP BY poweredby_stat_fam 
                  HAVING c>=$limiteminimo");
 while ($r = $q->fetch_array()) {
@@ -331,7 +332,7 @@ while ($rr = $qq->fetch_array()) {
 	$q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam 
 	                 FROM poweredby  
 	                 JOIN target ON poweredby.idtarget=target.idtarget
-	                 WHERE target.idcategory='$rr[idcategory]'
+	                 WHERE target.idcategory='$rr[idcategory]' AND poweredby_stat_fam<>''
 	                 GROUP BY poweredby_stat_fam 
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {

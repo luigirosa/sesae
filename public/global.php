@@ -339,7 +339,7 @@ function cache_dati($quale, $nocache = '') {
 				$q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam 
 				                 FROM poweredby  
 				                 JOIN target ON poweredby.idtarget=target.idtarget
-				                 $whw 
+				                 WHERE poweredby_stat_fam<>'' $wha
 				                 GROUP BY poweredby_stat_fam 
 				                 HAVING c>=10
 				                 ORDER BY c DESC,poweredby");
