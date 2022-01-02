@@ -205,7 +205,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY http_server_stat_fam
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_HTTPSERVER, $r['c'], $r['http_server_stat_fam']);
+		storicizza($today, $rr['idcategory'], ST_HTTPSERVER, $r['c'], $r['http_server_stat_fam']);
 	}
 	// generator
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_GENERATOR)->fetch_array();
@@ -217,7 +217,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY http_generator_stat_fam 
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_GENERATOR, $r['c'], $r['http_generator_stat_fam']);
+		storicizza($today, $rr['idcategory'], ST_GENERATOR, $r['c'], $r['http_generator_stat_fam']);
 	}
 	// DNS
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_DNS)->fetch_array();
@@ -229,7 +229,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY dnsauth_stat
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_DNS, $r['c'], $r['dnsauth_stat']);
+		storicizza($today, $rr['idcategory'], ST_DNS, $r['c'], $r['dnsauth_stat']);
 	}
 	// MX
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_MX)->fetch_array();
@@ -242,7 +242,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY mxserver.mxserver_stat
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_MX, $r['c'], $r['mxserver_stat']);
+		storicizza($today, $rr['idcategory'], ST_MX, $r['c'], $r['mxserver_stat']);
 	}
 	// ContentType
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_CONTENTTYPE)->fetch_array();
@@ -254,7 +254,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY http_contenttype 
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_CONTENTTYPE, $r['c'], $r['http_contenttype']);
+		storicizza($today, $rr['idcategory'], ST_CONTENTTYPE, $r['c'], $r['http_contenttype']);
 	}
 	// hash del certificato SSL
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_SSLHASH)->fetch_array();
@@ -266,7 +266,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY https_signature 
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_SSLHASH, $r['c'], $r['https_signature']);
+		storicizza($today, $rr['idcategory'], ST_SSLHASH, $r['c'], $r['https_signature']);
 	}
 	// emettitore del certificato SSL
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_SSLISSUER)->fetch_array();
@@ -278,7 +278,7 @@ while ($rr = $qq->fetch_array()) {
 	                 GROUP BY https_issuerorg 
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_SSLISSUER, $r['c'], $r['https_issuerorg']);
+		storicizza($today, $rr['idcategory'], ST_SSLISSUER, $r['c'], $r['https_issuerorg']);
 	}
 	// country IPv4
 	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_COUNTRYIPV4)->fetch_array();
@@ -290,7 +290,7 @@ while ($rr = $qq->fetch_array()) {
 					         GROUP BY ip.countrycode
 					         HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
-		storicizza($today, 0, ST_COUNTRYIPV4, $r['c'], $r['countrycode']);
+		storicizza($today, $rr['idcategory'], ST_COUNTRYIPV4, $r['c'], $r['countrycode']);
 	}
 
 }
