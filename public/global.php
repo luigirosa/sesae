@@ -291,15 +291,16 @@ function cache_dati($quale, $nocache = '') {
 				$t = $db->query("SELECT COUNT(*) FROM target JOIN targetdata ON targetdata.idtarget=target.idtarget WHERE targetdata.ishttps='1' $wha")->fetch_array();
 				$b .= "\n<table border='0' align='center'>";
 				$b .= "\n<tr><td align='center' colspan='3'><h2>Country IPv4</h2></td></tr>";
-				$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode
+				$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode,iso3166a2.stato
 				                 FROM target 
-				                 JOIN ip on target.idipv4=ip.idip
+				                 JOIN ip ON target.idipv4=ip.idip
+				                 JOIN iso3166a2 ON ip.countrycode=iso3166a2.iso
 				                 $whw
 				                 GROUP BY ip.countrycode
 				                 HAVING c>=9
 				                 ORDER BY c DESC");
 				while ($r = $q->fetch_array()) {
-					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[countrycode]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[stato]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_COUNTRYIPV4 "	. date("j/n/Y G:i:s") . " -->\n";
