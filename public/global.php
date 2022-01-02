@@ -76,6 +76,7 @@ define('CH_MX',             '005');	  // Mail Exchanger
 define('CH_CONTTYPE',       '006');	  // html content type
 define('CH_SSLHASH',        '007');	  // hash dei certificati ssl
 define('CH_SSLISSUER',      '008');	  // organizzazione emettitrice del certificato SSL
+define('CH_COUNTRYIPV4',    '009');	  // Country IPv4
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
@@ -147,11 +148,10 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN target ON http_generator.idtarget=target.idtarget
 				                 $whw 
 				                 GROUP BY http_generator_stat_fam 
+				                 HAVING c>=9
 				                 ORDER BY c DESC,http_generator_stat_fam");
 				while ($r = $q->fetch_array()) {
-					if ($r['c'] > 9) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[http_generator_stat_fam]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[http_generator_stat_fam]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_GENERATOR "	. date("j/n/Y G:i:s") . " -->\n";
@@ -169,11 +169,10 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN target ON http_server.idtarget=target.idtarget
 				                 $whw
 				                 GROUP BY http_server_stat_fam 
+				                 HAVING c>=9
 				                 ORDER BY c DESC,http_server_stat_fam");
 				while ($r = $q->fetch_array()) {
-					if ($r['c'] > 9) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[http_server_stat_fam]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[http_server_stat_fam]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_HTTPSERVER "	. date("j/n/Y G:i:s") . " -->\n";
@@ -191,11 +190,10 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN target ON dnsauth.idtarget=target.idtarget
 				                 $whw
 				                 GROUP BY dnsauth_stat
+				                 HAVING c>=9
 				                 ORDER BY c DESC,dnsauth_stat");
 				while ($r = $q->fetch_array()) {
-					if ($r['c'] > 9) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[dnsauth_stat]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[dnsauth_stat]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_DNS "	. date("j/n/Y G:i:s") . " -->\n";
@@ -214,11 +212,10 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN mxserver ON targetmx.idmxserver=mxserver.idmxserver
 				                 $whw
 				                 GROUP BY mxserver.mxserver_stat
+				                 HAVING c>=9
 				                 ORDER BY c DESC,mxserver.mxserver_stat");
 				while ($r = $q->fetch_array()) {
-					if ($r['c'] > 9) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[mxserver_stat]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[mxserver_stat]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_MX "	. date("j/n/Y G:i:s") . " -->\n";
@@ -236,11 +233,10 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN target ON targetdata.idtarget=target.idtarget
 				                 WHERE http_contenttype<>'' $wha 
 				                 GROUP BY http_contenttype 
+				                 HAVING c>=1
 				                 ORDER BY c DESC");
 				while ($r = $q->fetch_array()) {
-//					if ($r['c'] > 9) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[http_contenttype]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-//					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[http_contenttype]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_CONTTYPE "	. date("j/n/Y G:i:s") . " -->\n";
@@ -258,11 +254,10 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN target ON targetdata.idtarget=target.idtarget
 				                 WHERE https_signature<>'' $wha 
 				                 GROUP BY https_signature 
+				                 HAVING c>=0
 				                 ORDER BY c DESC");
 				while ($r = $q->fetch_array()) {
-//					if ($r['c'] > 9) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[https_signature]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-//					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[https_signature]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_SSLHASH "	. date("j/n/Y G:i:s") . " -->\n";
@@ -280,14 +275,34 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN target ON targetdata.idtarget=target.idtarget
 				                 WHERE https_issuerorg<>'' $wha 
 				                 GROUP BY https_issuerorg 
+				                 HAVING c>=5
 				                 ORDER BY c DESC");
 				while ($r = $q->fetch_array()) {
-					if ($r['c'] > 5) {
-						$b .= "\n<tr><td align='left' style='text-align: left;'>$r[https_issuerorg]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
-					}
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[https_issuerorg]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_SSLISSUER "	. date("j/n/Y G:i:s") . " -->\n";
+				file_put_contents($cachefile, $b);
+			break;
+			// Country IPv4
+			case CH_COUNTRYIPV4:
+				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
+				$whw = $idcategory == 0 ? '' : " WHERE target.idcategory='$idcategory'";
+				$t = $db->query("SELECT COUNT(*) FROM target JOIN targetdata ON targetdata.idtarget=target.idtarget WHERE targetdata.ishttps='1' $wha")->fetch_array();
+				$b .= "\n<table border='0' align='center'>";
+				$b .= "\n<tr><td align='center' colspan='3'><h2>Country IPv4</h2></td></tr>";
+				$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode
+				                 FROM target 
+				                 JOIN ip on target.idipv4=ip.idip
+				                 $whw
+				                 GROUP BY ip.countrycode
+				                 HAVING c>=9
+				                 ORDER BY c DESC");
+				while ($r = $q->fetch_array()) {
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[countrycode]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
+				}
+				$b.= "\n</table>";
+				$b .= "\n<!-- CH_COUNTRYIPV4 "	. date("j/n/Y G:i:s") . " -->\n";
 				file_put_contents($cachefile, $b);
 			break;
 			// errore!

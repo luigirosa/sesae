@@ -96,7 +96,7 @@ define('ST_HTTPSERVER',          5);
  define('ST_IISVER',              8);
  define('ST_POWERBY',             9);
  define('ST_PHPVER',             10);
- define('ST_COUNTRYIPV4',        11);
+define('ST_COUNTRYIPV4',        11);
 define('ST_SSLISSUER',          12);
 define('ST_SSLHASH',            13);
 define('ST_CONTENTTYPE',        14);

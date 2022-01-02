@@ -59,14 +59,15 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 		<div class="contenitorecolonne">
 			<div class="colcontenuto">
 				<?php
-					echo cache_dati(CH_STATGEN . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_CONTTYPE . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_HTTPSERVER . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_GENERATOR . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_DNS . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_MX . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_SSLISSUER . '-' . $idcategory, $nocache);
-					echo cache_dati(CH_SSLHASH . '-' . $idcategory, $nocache);
+					echo cache_dati(CH_STATGEN .     '-' . $idcategory, $nocache);
+					echo cache_dati(CH_COUNTRYIPV4 . '-' . $idcategory, $nocache);
+					echo cache_dati(CH_CONTTYPE .    '-' . $idcategory, $nocache);
+					echo cache_dati(CH_HTTPSERVER .  '-' . $idcategory, $nocache);
+					echo cache_dati(CH_GENERATOR .   '-' . $idcategory, $nocache);
+					echo cache_dati(CH_DNS .         '-' . $idcategory, $nocache);
+					echo cache_dati(CH_MX .          '-' . $idcategory, $nocache);
+					echo cache_dati(CH_SSLISSUER .   '-' . $idcategory, $nocache);
+					echo cache_dati(CH_SSLHASH .     '-' . $idcategory, $nocache);
 				?>
 			</div>
 			<div class="colindice">
