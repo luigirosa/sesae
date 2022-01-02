@@ -21,6 +21,7 @@
  * 20211210 aggiunto forzarescan()
  * 20211226 merge admin+public e ristrutturazione albero directory
  * 20211230 romosso RRD e storicizzazione su SQL
+ * 20220102 statistiche PoweredBy
  *
  * This file is part of SESAE.
  *
@@ -471,8 +472,12 @@ function aggiornacampo($idtarget, $campo, $valore) {
 			$db->query("DELETE FROM poweredby WHERE idtarget='$idtarget'");
 			if ('' != $valore) {
 				$a = array();
+				$s = array();
+				$s = statisticacampo($valore, 'PWR');
 				$a[] = $b2->campoSQL("idtarget", $idtarget);
 				$a[] = $b2->campoSQL("poweredby", $valore);
+				$a[] = $b2->campoSQL("poweredby_stat", $s['stat']);
+				$a[] = $b2->campoSQL("poweredby_stat_fam", $s['stat_fam']);
 				$db->query("INSERT INTO poweredby SET " . implode(',', $a));
 			}
 		break;
