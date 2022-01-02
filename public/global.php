@@ -290,7 +290,7 @@ function cache_dati($quale, $nocache = '') {
 			case CH_COUNTRYIPV4:
 				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
 				$whw = $idcategory == 0 ? '' : " WHERE target.idcategory='$idcategory'";
-				$t = $db->query("SELECT COUNT(*) FROM target JOIN targetdata ON targetdata.idtarget=target.idtarget WHERE targetdata.ishttps='1' $wha")->fetch_array();
+				$t = $db->query("SELECT COUNT(*) FROM target $whw")->fetch_array();
 				$b .= "\n<table border='0' align='center'>";
 				$b .= "\n<tr><td align='center' colspan='3'><h2>Country IPv4</h2></td></tr>";
 				$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode,iso3166a2.stato
@@ -312,7 +312,7 @@ function cache_dati($quale, $nocache = '') {
 			case CH_COUNTRYIPV6:
 				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
 				$whw = $idcategory == 0 ? '' : " WHERE target.idcategory='$idcategory'";
-				$t = $db->query("SELECT COUNT(*) FROM target JOIN targetdata ON targetdata.idtarget=target.idtarget WHERE targetdata.ishttps='1' $wha")->fetch_array();
+				$t = $db->query("SELECT COUNT(*) FROM target $whw")->fetch_array();
 				$b .= "\n<table border='0' align='center'>";
 				$b .= "\n<tr><td align='center' colspan='3'><h2>Country IPv6</h2></td></tr>";
 				$q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode,iso3166a2.stato
