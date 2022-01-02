@@ -62,6 +62,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 					echo cache_dati(CH_STATGEN .     '-' . $idcategory, $nocache);
 					echo cache_dati(CH_COUNTRYIPV4 . '-' . $idcategory, $nocache);
 					echo cache_dati(CH_COUNTRYIPV6 . '-' . $idcategory, $nocache);
+					echo cache_dati(CH_POWEREDBY .   '-' . $idcategory, $nocache);
 					echo cache_dati(CH_CONTTYPE .    '-' . $idcategory, $nocache);
 					echo cache_dati(CH_HTTPSERVER .  '-' . $idcategory, $nocache);
 					echo cache_dati(CH_GENERATOR .   '-' . $idcategory, $nocache);

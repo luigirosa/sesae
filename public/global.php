@@ -78,6 +78,7 @@ define('CH_SSLHASH',        '007');	  // hash dei certificati ssl
 define('CH_SSLISSUER',      '008');	  // organizzazione emettitrice del certificato SSL
 define('CH_COUNTRYIPV4',    '009');	  // Country IPv4
 define('CH_COUNTRYIPV6',    '010');	  // Country IPv6
+define('CH_POWEREDBY',    '011');	  // Country IPv6
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
@@ -305,6 +306,26 @@ function cache_dati($quale, $nocache = '') {
 				}
 				$b.= "\n</table>";
 				$b .= "\n<!-- CH_COUNTRYIPV6 "	. date("j/n/Y G:i:s") . " -->\n";
+				file_put_contents($cachefile, $b);
+			break;
+			case CH_POWEREDBY:
+				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
+				$whw = $idcategory == 0 ? '' : " WHERE target.idcategory='$idcategory'";
+				$t = $db->query("SELECT COUNT(*) FROM target $whw")->fetch_array();
+				$b .= "\n<table border='0' align='center'>";
+				$b .= "\n<tr><td align='center' colspan='3'><h2>Powered by</h2></td></tr>";
+				$q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam 
+				                 FROM poweredby  
+				                 JOIN target ON poweredby.idtarget=target.idtarget
+				                 $whw 
+				                 GROUP BY poweredby_stat_fam 
+				                 HAVING c>=10
+				                 ORDER BY c DESC,poweredby");
+				while ($r = $q->fetch_array()) {
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[poweredby]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
+				}
+				$b.= "\n</table>";
+				$b .= "\n<!-- CH_POWEREDBY "	. date("j/n/Y G:i:s") . " -->\n";
 				file_put_contents($cachefile, $b);
 			break;
 			// errore!

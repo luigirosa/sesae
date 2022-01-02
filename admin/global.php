@@ -95,7 +95,7 @@ define('ST_HTTPSERVER',          5);
  define('ST_APACHEVER',           6);
  define('ST_APACHEOS',            7);
  define('ST_IISVER',              8);
- define('ST_POWERBY',             9);
+define('ST_POWEREDBY',           9);
  define('ST_PHPVER',             10);
 define('ST_COUNTRYIPV4',        11);
 define('ST_COUNTRYIPV6',        21); // ultimo

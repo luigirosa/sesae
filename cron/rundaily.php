@@ -173,6 +173,16 @@ $q = $db->query("SELECT COUNT(ip.countrycode) AS c,ip.countrycode
 while ($r = $q->fetch_array()) {
 	storicizza($today, 0, ST_COUNTRYIPV6, $r['c'], $r['countrycode']);
 }
+// Powered By
+$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_POWEREDBY)->fetch_array();
+$limiteminimo = $r[0];
+$q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam 
+				         FROM poweredby  
+				         GROUP BY poweredby_stat_fam 
+                 HAVING c>=$limiteminimo");
+while ($r = $q->fetch_array()) {
+	storicizza($today, 0, ST_POWEREDBY, $r['c'], $r['poweredby_stat_fam']);
+}
 
 
 
@@ -314,6 +324,18 @@ while ($rr = $qq->fetch_array()) {
 					         HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
 		storicizza($today, $rr['idcategory'], ST_COUNTRYIPV6, $r['c'], $r['countrycode']);
+	}
+	// Powered By
+	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_POWEREDBY)->fetch_array();
+	$limiteminimo = $r[0];
+	$q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam 
+	                 FROM poweredby  
+	                 JOIN target ON poweredby.idtarget=target.idtarget
+	                 WHERE target.idcategory='$rr[idcategory]'
+	                 GROUP BY poweredby_stat_fam 
+	                 HAVING c>=$limiteminimo");
+	while ($r = $q->fetch_array()) {
+		storicizza($today, $rr['idcategory'], ST_POWEREDBY, $r['c'], $r['poweredby_stat_fam']);
 	}
 
 }
