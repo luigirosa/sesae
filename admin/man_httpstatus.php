@@ -119,7 +119,7 @@ if ($q->num_rows > 0) {
 	while ($r = $q->fetch_array()) {
 		$display = true;
 		if ($confiltro) {
-			$url = trim($r['url']);
+			$url = substr(trim($r['url']), 0, -1); // tolgo lo slash finale perche' alcune ridirezioni non hanno lo slash finale
 			$urlnos = str_replace('https://', 'http://', $url);
 			$loc = strtolower(trim($r['http_location']));
 			// se nel redirect c'e` tutto l'URL
