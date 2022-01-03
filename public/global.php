@@ -127,6 +127,12 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN ip ON target.idipv4=ip.idip 
 				                 $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>IPv4 univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
+				// in hosting
+				$r = $db->query("SELECT COUNT(*) 
+				                 FROM target
+				                 JOIN ip ON target.idipv4=ip.idip 
+				                 WHERE ip.ishosting='1' $wha")->fetch_array();
+				$b .=   "\n<tr><td align='left'><b>Presso hosting/colo</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// frame
 				$r = $db->query("SELECT COUNT(*)
                          FROM target 
