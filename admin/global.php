@@ -92,7 +92,7 @@ define('ST_GEN_CONIPV6',         3);
 define('ST_GEN_IPV4UNIVOCI',     4);
 define('ST_GEN_CONFRAME',       20);
 define('ST_HTTPSERVER',          5);
- define('ST_APACHEVER',           6);
+define('ST_GEN_HOSTING',         6);
  define('ST_APACHEOS',            7);
  define('ST_IISVER',              8);
 define('ST_POWEREDBY',           9);
