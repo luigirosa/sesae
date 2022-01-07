@@ -13,12 +13,12 @@
 }
 
 .colcontenuto {
-  flex: 70%;
+  flex: 80%;
   padding: 10px;
 }
 
 .colindice {
-  flex: 30%;
+  flex: 20%;
   padding: 1px;
   border-right: thin solid black;
 }
