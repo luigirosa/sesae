@@ -71,11 +71,16 @@ $r = $db->query("SELECT COUNT(DISTINCT ip.idip)
                  FROM target
                  JOIN ip ON target.idipv4=ip.idip")->fetch_array();
 storicizza($today, 0, ST_GEN_IPV4UNIVOCI, $r[0]);
-// AS univoci
+// AS IPv4 univoci
 $r = $db->query("SELECT COUNT(DISTINCT ip.as) 
                  FROM target
                  JOIN ip ON target.idipv4=ip.idip")->fetch_array();
 storicizza($today, 0, ST_GEN_AS4UNIVOCI, $r[0]);
+// AS IPv6 univoci
+$r = $db->query("SELECT COUNT(DISTINCT ip.as) 
+                 FROM target
+                 JOIN ip ON target.idipv6=ip.idip")->fetch_array();
+storicizza($today, 0, ST_GEN_AS6UNIVOCI, $r[0]);
 // in hosting/colo
 $r = $db->query("SELECT COUNT(*) 
                  FROM target
@@ -244,12 +249,18 @@ while ($rr = $qq->fetch_array()) {
                    JOIN ip ON target.idipv4=ip.idip
 	                 WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_IPV4UNIVOCI, $r[0]);
-	// AS univoci
+	// AS IPv4 univoci
 	$r = $db->query("SELECT COUNT(DISTINCT ip.as) 
                    FROM target
                    JOIN ip ON target.idipv4=ip.idip
 	               WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
 	storicizza($today, $rr['idcategory'], ST_GEN_AS4UNIVOCI, $r[0]);
+	// AS IPv6 univoci
+	$r = $db->query("SELECT COUNT(DISTINCT ip.as) 
+                   FROM target
+                   JOIN ip ON target.idipv6=ip.idip
+	               WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
+	storicizza($today, $rr['idcategory'], ST_GEN_AS6UNIVOCI, $r[0]);
 	// in hosting/colo
 	$r = $db->query("SELECT COUNT(*) 
                    FROM target

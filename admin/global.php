@@ -96,7 +96,7 @@ define('ST_GEN_HOSTING',         6);
 define('ST_ASIPV4',              7);
 define('ST_ASIPV6',              8);
 define('ST_POWEREDBY',           9);
- define('ST_PHPVER',             10);
+define('ST_GEN_AS4UNIVOCI',     10);
 define('ST_COUNTRYIPV4',        11);
 define('ST_COUNTRYIPV6',        21); // ultimo
 define('ST_SSLISSUER',          12);
@@ -104,7 +104,7 @@ define('ST_SSLHASH',            13);
 define('ST_CONTENTTYPE',        14);
 define('ST_DNS',                15);
 define('ST_MX',                 16);
- define('ST_TLD',                17);
+define('ST_GEN_AS6UNIVOCI',     17);
 define('ST_GENERATOR',          19);
 
 //array con gli algoritmi delle statistiche
