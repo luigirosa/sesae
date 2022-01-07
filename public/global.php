@@ -403,7 +403,7 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN ip ON target.idipv6=ip.idip
 				                 $whw
 				                 GROUP BY ip.as
-				                 HAVING c>=10
+				                 HAVING c>=5
 				                 ORDER BY c DESC");
 				while ($r = $q->fetch_array()) {
 					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[asname] $r[as] $r[asowner]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
