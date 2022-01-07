@@ -80,7 +80,7 @@ define('CH_COUNTRYIPV4',    '009');	  // Country IPv4
 define('CH_COUNTRYIPV6',    '010');	  // Country IPv6
 define('CH_POWEREDBY',      '011');	  // Powered by
 define('CH_ASIPV4',         '012');	  // AS IPv4
-define('CH_ASIPV6',         '012');	  // AS IPv4
+define('CH_ASIPV6',         '013');	  // AS IPv6
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
