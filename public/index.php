@@ -58,7 +58,6 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 		<h1><a href="https://sesae.com/">SESAE</a></h1>
 		<div class="contenitorecolonne">
 		<div class="colindice">
-				<h2>Categorie</h2>
 				<?php
 					$q = $db->query("SELECT idcategory,category FROM category WHERE enabled='1' ORDER BY weight");
 					while ($r = $q->fetch_array()) {
