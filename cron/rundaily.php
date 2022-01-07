@@ -75,7 +75,7 @@ storicizza($today, 0, ST_GEN_IPV4UNIVOCI, $r[0]);
 $r = $db->query("SELECT COUNT(DISTINCT ip.as) 
                  FROM target
                  JOIN ip ON target.idipv4=ip.idip")->fetch_array();
-storicizza($today, 0, ST_GEN_ASUNIVOCI, $r[0]);
+storicizza($today, 0, ST_GEN_AS4UNIVOCI, $r[0]);
 // in hosting/colo
 $r = $db->query("SELECT COUNT(*) 
                  FROM target
@@ -195,6 +195,17 @@ $q = $db->query("SELECT COUNT(*) AS c,poweredby_stat_fam
 while ($r = $q->fetch_array()) {
 	storicizza($today, 0, ST_POWEREDBY, $r['c'], $r['poweredby_stat_fam']);
 }
+// AS IPv4
+$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_ASIPV4)->fetch_array();
+$limiteminimo = $r[0];
+$q = $db->query("SELECT COUNT(ip.as) AS c,ip.as
+				         FROM target 
+				         JOIN ip on target.idipv4=ip.idip
+				         GROUP BY ip.as
+				         HAVING c>=$limiteminimo");
+while ($r = $q->fetch_array()) {
+	storicizza($today, 0, ST_ASIPV4, $r['c'], $r['as']);
+}
 
 
 
@@ -227,7 +238,7 @@ while ($rr = $qq->fetch_array()) {
                    FROM target
                    JOIN ip ON target.idipv4=ip.idip
 	               WHERE target.idcategory='$rr[idcategory]'")->fetch_array();
-	storicizza($today, $rr['idcategory'], ST_GEN_ASUNIVOCI, $r[0]);
+	storicizza($today, $rr['idcategory'], ST_GEN_AS4UNIVOCI, $r[0]);
 	// in hosting/colo
 	$r = $db->query("SELECT COUNT(*) 
                    FROM target
@@ -360,6 +371,18 @@ while ($rr = $qq->fetch_array()) {
 	                 HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
 		storicizza($today, $rr['idcategory'], ST_POWEREDBY, $r['c'], $r['poweredby_stat_fam']);
+	}
+	// AS IPv4
+	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_ASIPV4)->fetch_array();
+	$limiteminimo = $r[0];
+	$q = $db->query("SELECT COUNT(ip.as) AS c,ip.as
+					         FROM target 
+					         JOIN ip on target.idipv4=ip.idip
+					         WHERE target.idcategory='$rr[idcategory]'
+					         GROUP BY ip.as
+					         HAVING c>=$limiteminimo");
+	while ($r = $q->fetch_array()) {
+		storicizza($today, $rr['idcategory'], ST_ASIPV4, $r['c'], $r['as']);
 	}
 
 }

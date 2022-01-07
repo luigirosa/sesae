@@ -79,6 +79,7 @@ define('CH_SSLISSUER',      '008');	  // organizzazione emettitrice del certific
 define('CH_COUNTRYIPV4',    '009');	  // Country IPv4
 define('CH_COUNTRYIPV6',    '010');	  // Country IPv6
 define('CH_POWEREDBY',      '011');	  // Powered by
+define('CH_ASIPV4',         '012');	  // AS IPv4
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
@@ -127,12 +128,12 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN ip ON target.idipv4=ip.idip 
 				                 $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>IPv4 univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
-				// AS univoci
+				// AS IPv4 univoci
 				$r = $db->query("SELECT COUNT(DISTINCT ip.as) 
 				                 FROM target
 				                 JOIN ip ON target.idipv4=ip.idip 
 				                 $whw")->fetch_array();
-				$b .=   "\n<tr><td align='left'><b>AS univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
+				$b .=   "\n<tr><td align='left'><b>AS IPv4 univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// in hosting
 				$r = $db->query("SELECT COUNT(*) 
 				                 FROM target
@@ -362,6 +363,28 @@ function cache_dati($quale, $nocache = '') {
 				$b .= "\n<!-- CH_POWEREDBY "	. date("j/n/Y G:i:s") . " -->\n";
 				file_put_contents($cachefile, $b);
 			break;
+			// AS IPv4
+			case CH_ASIPV4:
+				$wha = $idcategory == 0 ? '' : " AND target.idcategory='$idcategory'";
+				$whw = $idcategory == 0 ? '' : " WHERE target.idcategory='$idcategory'";
+				$t = $db->query("SELECT COUNT(*) FROM target $whw")->fetch_array();
+				$b .= "\n<table border='0' align='center'>";
+				$b .= "\n<tr><td align='center' colspan='3'><h2>AS IPv4</h2></td></tr>";
+				$q = $db->query("SELECT COUNT(ip.as) AS c,ip.as,ip.asname,ip.asowner
+				                 FROM target 
+				                 JOIN ip ON target.idipv4=ip.idip
+				                 $whw
+				                 GROUP BY ip.as
+				                 HAVING c>=10
+				                 ORDER BY c DESC");
+				while ($r = $q->fetch_array()) {
+					$b .= "\n<tr><td align='left' style='text-align: left;'>$r[asname] $r[as] $r[asowner]</td><td align='right' style='text-align: right;'>" . number_format($r['c'], 0, ',', '.') . "</td><td align='right' style='text-align: right;'>" . number_format(($r['c']*100/$t[0]), 2, ',', '.') . "%</td></tr>";
+				}
+				$b.= "\n</table>";
+				$b .= "\n<!-- CH_COUNTRYIPV4 "	. date("j/n/Y G:i:s") . " -->\n";
+				file_put_contents($cachefile, $b);
+			break;
+
 			// errore!
 			default:
 				$b .= "CACHE_DATI errore, $quale non riconosciuto";
