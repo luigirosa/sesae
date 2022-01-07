@@ -25,7 +25,7 @@
 
 body {
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1em;
+	font-size: 0.9em;
   font-weight: normal;
 }
 
@@ -61,7 +61,7 @@ h2 {
 
 /* navigatore */
 .linavigatore {
-	font-size: 0.9em;
+	font-size: 0.8em;
   text-align: left;
   margin-top: 0;
   margin-bottom: 0;
