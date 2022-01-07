@@ -57,6 +57,15 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 	<body>
 		<h1><a href="https://sesae.com/">SESAE</a></h1>
 		<div class="contenitorecolonne">
+		<div class="colindice">
+				<h2>Categorie</h2>
+				<?php
+					$q = $db->query("SELECT idcategory,category FROM category WHERE enabled='1' ORDER BY weight");
+					while ($r = $q->fetch_array()) {
+						echo  "\n<div class='linavigatore'><a href='index.php?c=$r[idcategory]' class='linavigatore'>$r[category]</a></div>";
+					}
+				?>
+			</div>
 			<div class="colcontenuto">
 				<?php
 					echo cache_dati(CH_STATGEN .     '-' . $idcategory, $nocache);
@@ -72,15 +81,6 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 					echo cache_dati(CH_MX .          '-' . $idcategory, $nocache);
 					echo cache_dati(CH_SSLISSUER .   '-' . $idcategory, $nocache);
 					echo cache_dati(CH_SSLHASH .     '-' . $idcategory, $nocache);
-				?>
-			</div>
-			<div class="colindice">
-				<h2>Categorie</h2>
-				<?php
-					$q = $db->query("SELECT idcategory,category FROM category WHERE enabled='1' ORDER BY weight");
-					while ($r = $q->fetch_array()) {
-						echo  "\n<div class='linavigatore'><a href='index.php?c=$r[idcategory]' class='linavigatore'>$r[category]</a></div>";
-					}
 				?>
 			</div>
 		</div>

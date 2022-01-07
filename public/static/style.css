@@ -20,7 +20,7 @@
 .colindice {
   flex: 30%;
   padding: 1px;
-  border-left: thin solid black;
+  border-right: thin solid black;
 }
 
 body {
@@ -51,11 +51,20 @@ h1 {
 
 /* titolo in testa alle colonne */
 h2 {
-	font-size: 1.4em;
+	font-size: 1.2em;
   font-weight: bold;
   text-align: left;
   margin-top: 0;
   margin-bottom: 0.5em;
+  margin-left: 0;
+}
+
+/* navigatore */
+.linavigatore {
+	font-size: 0.9em;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0;
   margin-left: 0;
 }
 
