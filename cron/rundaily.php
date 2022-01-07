@@ -206,6 +206,17 @@ $q = $db->query("SELECT COUNT(ip.as) AS c,ip.as
 while ($r = $q->fetch_array()) {
 	storicizza($today, 0, ST_ASIPV4, $r['c'], $r['as']);
 }
+// AS IPv6
+$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_ASIPV6)->fetch_array();
+$limiteminimo = $r[0];
+$q = $db->query("SELECT COUNT(ip.as) AS c,ip.as
+				         FROM target 
+				         JOIN ip on target.idipv6=ip.idip
+				         GROUP BY ip.as
+				         HAVING c>=$limiteminimo");
+while ($r = $q->fetch_array()) {
+	storicizza($today, 0, ST_ASIPV6, $r['c'], $r['as']);
+}
 
 
 
@@ -383,6 +394,18 @@ while ($rr = $qq->fetch_array()) {
 					         HAVING c>=$limiteminimo");
 	while ($r = $q->fetch_array()) {
 		storicizza($today, $rr['idcategory'], ST_ASIPV4, $r['c'], $r['as']);
+	}
+	// AS IPv6
+	$r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_ASIPV6)->fetch_array();
+	$limiteminimo = $r[0];
+	$q = $db->query("SELECT COUNT(ip.as) AS c,ip.as
+					         FROM target 
+					         JOIN ip on target.idipv6=ip.idip
+					         WHERE target.idcategory='$rr[idcategory]'
+					         GROUP BY ip.as
+					         HAVING c>=$limiteminimo");
+	while ($r = $q->fetch_array()) {
+		storicizza($today, $rr['idcategory'], ST_ASIPV6, $r['c'], $r['as']);
 	}
 
 }
