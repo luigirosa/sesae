@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'c6600985bbb742b945b942641222c4b7135f0c80',
+    'reference' => '18822de3f2c42f49035828b496ceacdb80826c4a',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'c6600985bbb742b945b942641222c4b7135f0c80',
+      'reference' => '18822de3f2c42f49035828b496ceacdb80826c4a',
     ),
     'guzzlehttp/guzzle' => 
     array (

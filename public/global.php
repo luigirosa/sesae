@@ -78,7 +78,7 @@ define('CH_SSLHASH',        '007');	  // hash dei certificati ssl
 define('CH_SSLISSUER',      '008');	  // organizzazione emettitrice del certificato SSL
 define('CH_COUNTRYIPV4',    '009');	  // Country IPv4
 define('CH_COUNTRYIPV6',    '010');	  // Country IPv6
-define('CH_POWEREDBY',      '011');	  // Country IPv6
+define('CH_POWEREDBY',      '011');	  // Powered by
 
 function cache_dati($quale, $nocache = '') {
 	global $b2,$db;
@@ -127,6 +127,12 @@ function cache_dati($quale, $nocache = '') {
 				                 JOIN ip ON target.idipv4=ip.idip 
 				                 $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>IPv4 univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
+				// AS univoci
+				$r = $db->query("SELECT COUNT(DISTINCT ip.as) 
+				                 FROM target
+				                 JOIN ip ON target.idipv4=ip.idip 
+				                 $whw")->fetch_array();
+				$b .=   "\n<tr><td align='left'><b>AS univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// in hosting
 				$r = $db->query("SELECT COUNT(*) 
 				                 FROM target
