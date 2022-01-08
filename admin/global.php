@@ -665,11 +665,11 @@ function scantarget($idtarget, $idprobe = 0) {
 	$context = stream_context_set_default($opts);
 
 	// definisco l'oggetto Net_DNS2 per usarlo all' interno della funzione
-//	$dns2 = new Net_DNS2_Resolver(array(
-//		'nameservers'   => $aNetDNS2resolvers,
-//		'ns_random'    => true
-//		));
-	$dns2 = new Net_DNS2_Resolver();
+	$dns2 = new Net_DNS2_Resolver(array(
+		'nameservers'   => $aNetDNS2resolvers,
+		'ns_random'    => true
+		));
+	// $dns2 = new Net_DNS2_Resolver();
 		
 	$r = $db->query("SELECT target.url,target.mailhost,
 	                        targetdata.hostname,targetdata.ipv6,targetdata.ipv4,targetdata.ipv6host,targetdata.ipv4host
