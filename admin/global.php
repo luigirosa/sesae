@@ -648,7 +648,7 @@ function scantarget($idtarget, $idprobe = 0) {
 	// aggiorno l'ultima visita
 	$db->query("UPDATE target SET visited ='" . time() . "' WHERE idtarget='$idtarget'");	
 
-	$retval = '';
+	$retval = "\n";
 	// default per get_headers
 	$opts = array(
 	  'http'=>array(
@@ -687,7 +687,7 @@ function scantarget($idtarget, $idprobe = 0) {
 	
 	$r['hostname'] = calcolahostname($r['url']);
 	aggiornacampo($idtarget, 'hostname', $r['hostname']);
-	$retval = "\n$r[hostname]";	
+	$retval = "$r[hostname]\n";	
 	// popolaro mailhost
 	if ('' == trim($r['mailhost'])) {
 		$mailhost = str_ireplace('www.', '', $r['hostname']);
@@ -699,12 +699,12 @@ function scantarget($idtarget, $idprobe = 0) {
 	$qq = $db->query("SELECT idtarget FROM targetdata WHERE idtarget='$idtarget'");
 	if ($qq->num_rows < 1) {
 		$db->query("INSERT INTO targetdata SET idtarget='$idtarget',hostname='$r[hostname]'");
-		$retval .= " targetdata creato";
+		$retval .= "+targetdata creato\n";
 	}
 	$qq = $db->query("SELECT idtarget FROM targetraw WHERE idtarget='$idtarget'");
 	if ($qq->num_rows < 1) {
 		$db->query("INSERT INTO targetraw SET idtarget='$idtarget'");
-		$retval .= " targetraw creato";
+		$retval .= "+targetraw creato\n";
 	}
 	
 	// vedo se il dominio ha un DNS che riesce a risolvere almeno l'IPv4
@@ -712,7 +712,7 @@ function scantarget($idtarget, $idprobe = 0) {
 	try {
   	$adns = $dns2->query($r['hostname'], 'A');
   } catch(Net_DNS2_Exception $e) {
-		$retval .= " impossibile risolvere il nome: " . $e->getMessage();
+		$retval .= "!impossibile risolvere il nome: " . $e->getMessage() . "\n";
 		aggiornacampo($idtarget, 'http_code', HTTP_ENORESOLVE);
 		$dnsok = false;
 	}
@@ -744,7 +744,7 @@ function scantarget($idtarget, $idprobe = 0) {
 		try {
 			$aipv6 = $dns2->query($r['hostname'], 'AAAA');
 			if (isset($aipv6->answer[0])) {
-				$retval .= " IPV6 ";
+				$retval .= "-IPV6\n";
 				$ipv6 = isset($adns->answer[0]->address) ? $aipv6->answer[0]->address : '';
 				$ipv6 = substr(trim($ipv6), 0, 250);
 				$ipv6host = isset($adns->answer[0]->name) ? $aipv6->answer[0]->name : '';
@@ -766,7 +766,7 @@ function scantarget($idtarget, $idprobe = 0) {
 				aggiornacampo($idtarget, 'ipv6cname', '');
 			}
 		}	catch(Net_DNS2_Exception $e) {
-			$retval .= " errore AAAA: " . $e->getMessage();
+			$retval .= "!errore AAAA: " . $e->getMessage() . "\n";
 			aggiornacampo($idtarget, 'ipv6', '');
 			aggiornacampo($idtarget, 'ipv6host', '');
 			aggiornacampo($idtarget, 'ipv6cname', '');
@@ -785,7 +785,7 @@ function scantarget($idtarget, $idprobe = 0) {
 	       }
 	    }
 	  } catch(Net_DNS2_Exception $e) {
-			$retval .= " errore NS1: " . $e->getMessage();
+			$retval .= "!errore NS1: " . $e->getMessage() . "\n";
 			$dnsns = false;
 		}
 		// se non ho trovato DNS usando hostname (capita con alcuni server) riprovo con il mailhost
@@ -800,7 +800,7 @@ function scantarget($idtarget, $idprobe = 0) {
 					 }
 				}
 			} catch(Net_DNS2_Exception $e) {
-				$retval .= " errore NS2: " . $e->getMessage();
+				$retval .= "!errore NS2: " . $e->getMessage() . "\n";
 				$dnsns = false;
 			}
 		}
@@ -846,7 +846,7 @@ function scantarget($idtarget, $idprobe = 0) {
 		curl_close($curl);
 		//http_code
 		$http_code = $curlinfo['http_code'];
-		$retval .= " http_$http_code";
+		$retval .= "-http_$http_code\n";
 		aggiornacampo($idtarget, 'http_code', $http_code);
 		// cleanup HTML
 		$content = str_replace(chr(8), '', $content);
@@ -911,10 +911,10 @@ function scantarget($idtarget, $idprobe = 0) {
 		$pem_cert = '';
 		$pem_chain = '';
 		if ('https' == substr($r['url'], 0, 5)) {
-			$retval .= " https";
+			$retval .= "-https\n";
 			$stream = stream_context_create (array("ssl" => array("capture_peer_cert" => TRUE, "SNI_enabled" => TRUE, "allow_self_signed"=>TRUE )));
 			if ($streamsocket = @stream_socket_client("ssl://$r[hostname]:443", $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $stream)) {
-				$retval .= " found";
+				$retval .= "-https found\n";
 				$acont = stream_context_get_params($streamsocket);
 				openssl_x509_export($acont["options"]["ssl"]["peer_certificate"], $pem_cert);
 				$acert = openssl_x509_parse($pem_cert);
@@ -927,7 +927,7 @@ function scantarget($idtarget, $idprobe = 0) {
 				aggiornacampo($idtarget, 'https_validto', $acert['validTo_time_t']);
 				aggiornacampo($idtarget, 'https_signature', $acert['signatureTypeSN']);
 			} else {
-				$retval .= " not found";
+				$retval .= "!https not found\n";
 				aggiornacampo($idtarget, 'ishttps', 0);
 				aggiornacampo($idtarget, 'https_cert', "$errno: $errstr");
 				aggiornacampo($idtarget, 'https_certname', '');
@@ -976,11 +976,11 @@ function scantarget($idtarget, $idprobe = 0) {
 					aggiornacampo($idtarget, 'robots', $robots);
 				} else {
 					aggiornacampo($idtarget, 'robots', '');
-					$retval .= " no_robots $ainfo[http_code]";
+					$retval .= "-no_robots $ainfo[http_code]\n";
 				}
 			} else {
 				aggiornacampo($idtarget, 'robots', '');
-				$retval .= " no_robots (curl)";
+				$retval .= "-no_robots (curl)\n";
 			}
 			curl_close($curl);
 			// salvo i cookies
@@ -999,11 +999,11 @@ function scantarget($idtarget, $idprobe = 0) {
 	    }
 			aggiornacampoarray($idtarget, 'mx', $amx);
 	  } catch(Net_DNS2_Exception $e) {
-			$retval .= " errore MX: " . $e->getMessage();
+			$retval .= "!errore MX: " . $e->getMessage() . "\n";
 			aggiornacampoarray($idtarget, 'mx', array());
 		}
 
-		$retval .= " $r[url]";
+		$retval .= "-$r[url]\n";
 	} // if dnsok
 
 	// aggiona stats
