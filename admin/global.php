@@ -111,7 +111,8 @@ define('ST_GENERATOR',          19);
 $aAlgoStat = array('RPL'=>'Sostituisci il testo','RGX'=>'RegEx');
 
 // array dei resolver utilizzati da Net_DNS2
-$aNetDNS2resolvers = array('9.9.9.9', '1.1.1.1', '8.8.8.8');
+//                          Quad9      Cloudflare  BigG      OpenDNS           Comodo
+$aNetDNS2resolvers = array('9.9.9.9', '1.1.1.1', '8.8.8.8', '208.67.222.222', '8.26.56.26');
 
 if(!defined('SKIPCHECK')) {
 	// prima di tutto: se non e' impostato l'array di sessione, e' inutile continuare (e generare warning nei log!)
@@ -365,8 +366,6 @@ function getipgeo($ip) {
 					$a[] = $b2->campoSQL("asowner", $asowner);
 					$retval['asowner'] = $asowner;
 				}
-				
-				
 				if (isset($ret->hosting)) {
 					$hosting = $ret->hosting == 'true' ? 1 : 0;
 					$a[] = $b2->campoSQL("ishosting", $hosting);
@@ -664,12 +663,14 @@ function scantarget($idtarget, $idprobe = 0) {
 	  )
 	);
 	$context = stream_context_set_default($opts);
+
 	// definisco l'oggetto Net_DNS2 per usarlo all' interno della funzione
-	$dns2 = new Net_DNS2_Resolver(array(
-		'nameservers'   => $aNetDNS2resolvers,
-		'ns_random'    => true
-		));
-	
+//	$dns2 = new Net_DNS2_Resolver(array(
+//		'nameservers'   => $aNetDNS2resolvers,
+//		'ns_random'    => true
+//		));
+	$dns2 = new Net_DNS2_Resolver();
+		
 	$r = $db->query("SELECT target.url,target.mailhost,
 	                        targetdata.hostname,targetdata.ipv6,targetdata.ipv4,targetdata.ipv6host,targetdata.ipv4host
 	                 FROM target
@@ -723,7 +724,6 @@ function scantarget($idtarget, $idprobe = 0) {
 			$rr = $qq->fetch_array();
 			file_put_contents($cookiejar, $rr['cookies']);
 		}
-		
 		// IPv4
 		$ipv4 = isset($adns->answer[0]->address) ? $adns->answer[0]->address : '';
 		$ipv4 = substr(trim($ipv4), 0, 15);
@@ -741,29 +741,37 @@ function scantarget($idtarget, $idprobe = 0) {
 		aggiornacampo($idtarget, 'ipv4', $ipv4);
 		aggiornacampo($idtarget, 'ipv4cname', $ipv4cname);
 		// IPv6
-  	$aipv6 = $dns2->query($r['hostname'], 'AAAA');
-		if (isset($aipv6->answer[0])) {
-			$retval .= " IPV6 ";
-			$ipv6 = isset($adns->answer[0]->address) ? $aipv6->answer[0]->address : '';
-			$ipv6 = substr(trim($ipv6), 0, 250);
-			$ipv6host = isset($adns->answer[0]->name) ? $aipv6->answer[0]->name : '';
-			$ipv6host = substr(trim($ipv6host), 0, 250);
-			aggiornacampo($idtarget, 'ipv6host', $ipv6host);
-			// se la query ritorna un CNAME, il secondo elemento di answer[] e` il record A 
-			if (isset($aipv6->answer[0]->cname)) {
-				$ipv6cname = substr(trim($aipv6->answer[0]->cname), 0, 250);
-				$ipv6 = isset($aipv6->answer[1]->address) ? $aipv6->answer[1]->address : '';
-				$ipv6 = trim($ipv6);
+		try {
+			$aipv6 = $dns2->query($r['hostname'], 'AAAA');
+			if (isset($aipv6->answer[0])) {
+				$retval .= " IPV6 ";
+				$ipv6 = isset($adns->answer[0]->address) ? $aipv6->answer[0]->address : '';
+				$ipv6 = substr(trim($ipv6), 0, 250);
+				$ipv6host = isset($adns->answer[0]->name) ? $aipv6->answer[0]->name : '';
+				$ipv6host = substr(trim($ipv6host), 0, 250);
+				aggiornacampo($idtarget, 'ipv6host', $ipv6host);
+				// se la query ritorna un CNAME, il secondo elemento di answer[] e` il record A 
+				if (isset($aipv6->answer[0]->cname)) {
+					$ipv6cname = substr(trim($aipv6->answer[0]->cname), 0, 250);
+					$ipv6 = isset($aipv6->answer[1]->address) ? $aipv6->answer[1]->address : '';
+					$ipv6 = trim($ipv6);
+				} else {
+					$ipv6cname = '';
+				}
+				aggiornacampo($idtarget, 'ipv6', $ipv6);
+				aggiornacampo($idtarget, 'ipv6cname', $ipv6cname);
 			} else {
-				$ipv6cname = '';
+				aggiornacampo($idtarget, 'ipv6', '');
+				aggiornacampo($idtarget, 'ipv6host', '');
+				aggiornacampo($idtarget, 'ipv6cname', '');
 			}
-			aggiornacampo($idtarget, 'ipv6', $ipv6);
-			aggiornacampo($idtarget, 'ipv6cname', $ipv6cname);
-	  } else {
+		}	catch(Net_DNS2_Exception $e) {
+			$retval .= " errore AAAA: " . $e->getMessage();
 			aggiornacampo($idtarget, 'ipv6', '');
 			aggiornacampo($idtarget, 'ipv6host', '');
 			aggiornacampo($idtarget, 'ipv6cname', '');
-		}
+	}
+
 		// DNS autoritari
 		$dnsns = true;
 		$nscount = 0;
@@ -777,16 +785,32 @@ function scantarget($idtarget, $idprobe = 0) {
 	       }
 	    }
 	  } catch(Net_DNS2_Exception $e) {
-			$retval .= " errore NS: " . $e->getMessage();
+			$retval .= " errore NS1: " . $e->getMessage();
 			$dnsns = false;
 		}
-    // se non ci sono DNS autoritativi espliciti, guardo l'autorita` che ha risposto
+		// se non ho trovato DNS usando hostname (capita con alcuni server) riprovo con il mailhost
 		if ($nscount < 1) {
+			try {
+				$nameservers = $dns2->query($r['mailhost'], 'NS');
+				$authdns = array();
+				foreach($nameservers->answer as $record) {
+					if (isset($record->nsdname)) {
+						$authdns[] = $record->nsdname;
+						$nscount++;
+					 }
+				}
+			} catch(Net_DNS2_Exception $e) {
+				$retval .= " errore NS2: " . $e->getMessage();
+				$dnsns = false;
+			}
+		}
+    // se non ci sono DNS autoritativi espliciti, proco con l'autorita` che ha risposto, se esiste
+		if ($nscount < 1 and isset($nameservers->authority[0]->mname)) {
 			$authdns[] = $nameservers->authority[0]->mname;
 		}
 		aggiornacampoarray($idtarget, 'dnsauth', $authdns);
 		
-		//pulizia!
+		// pulizia!
 		$db->query("DELETE FROM http_server WHERE idtarget='$idtarget'");
 		$db->query("DELETE FROM meta WHERE idtarget='$idtarget'");
 		$db->query("DELETE FROM http_generator WHERE idtarget='$idtarget'");
@@ -839,6 +863,8 @@ function scantarget($idtarget, $idprobe = 0) {
 		}
 		// meta
 		$dom = new DOMDocument;
+		// per non visualizzare i warnong di chi non sa scrivere in HTML
+		libxml_use_internal_errors(true);
 		if($dom->loadHTML($content)) {
 			// meta
 			foreach( $dom->getElementsByTagName('meta') as $meta ) { 
@@ -1060,15 +1086,18 @@ function leggiheader($url, $method = 'curl', $cookiejar) {
 			break;
 		case 'guzzle':
 			$client = new GuzzleHttp\Client(['base_uri' => $url, 'timeout'  => 10, 'allow_redirects' => false]);
-			$response = $client->request('GET', $url);
-			foreach ($response->getHeaders() as $name => $values) {
-				$aret[] = $name . ': ' . implode(', ', $values);
-			}	
+			try {
+				$response = $client->request('GET', $url);
+				foreach ($response->getHeaders() as $name => $values) {
+					$aret[] = $name . ': ' . implode(', ', $values);
+				}
+			} catch (GuzzleHttp\Exception\GuzzleException $e) {	
+				// c'e' niente da prendere
+			}
 			break;
 		}
 	return $aret;
 }
-
 
 
 /**
