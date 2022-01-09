@@ -881,14 +881,14 @@ function scantarget($idtarget, $idprobe = 0) {
 			}
 		}
 		
-		// google analytics
+		// google analytics tracking code
 		$amatch = array();
 		if (preg_match('/ua-\d{5,10}(-\d{1,4})?/i',$content, $amatch)) {
 			aggiornacampo($idtarget, 'goog_analytics', $amatch[0]);
 		} else {
 			aggiornacampo($idtarget, 'goog_analytics', '');
 		}
-		// google analytics async
+		// google analytics asynchronous tracking
 		$amatch = array();
 		if (preg_match('/ca-pub-\d{16,18}/i',$content, $amatch)) {
 			aggiornacampo($idtarget, 'goog_asy', $amatch[0]);

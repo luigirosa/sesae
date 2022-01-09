@@ -153,6 +153,24 @@ function cache_dati($quale, $nocache = '') {
 	                       JOIN http_html ON http_html.idtarget=target.idtarget
 		                     WHERE (http_html.http_html LIKE '%<iframe%' OR http_html.http_html LIKE '%<frameset%') $wha")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>Che usano frame</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
+				// Google Analytics Tracking Code (UA)
+				$r = $db->query("SELECT COUNT(DISTINCT targetdata.goog_analytics)
+                         FROM target 
+	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
+		                     $whw")->fetch_array();
+				$b .=   "\n<tr><td align='left'><b>Google Analytics Tracking Code (UA) univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
+				// Google Analytics Tag Manager
+				$r = $db->query("SELECT COUNT(DISTINCT targetdata.goog_tag)
+                         FROM target 
+	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
+		                     $whw")->fetch_array();
+				$b .=   "\n<tr><td align='left'><b>Google Analytics Tag Manager univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
+				// Google Analytics Asynchronous tracking 
+				$r = $db->query("SELECT COUNT(DISTINCT targetdata.goog_async)
+                         FROM target 
+	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
+		                     $whw")->fetch_array();
+				$b .=   "\n<tr><td align='left'><b>Google Analytics Asynchronous Tracking univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 
 				$b .=   "\n</table>";
 				$b .= "\n<!-- CH_STATGEN "	. date("j/n/Y G:i:s") . " -->\n";
