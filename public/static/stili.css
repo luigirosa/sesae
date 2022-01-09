@@ -1,0 +1,30 @@
+html{
+  font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+  font-weight: normal;
+  margin:auto;
+  max-width:50em;
+  padding:0 3%
+}
+
+.lista-nostile{
+  padding:0
+}
+
+.lista-nostile li{
+  list-style-type:none;
+  margin-bottom: 0.5em}
+
+nav li{padding-right:.5em}
+
+@media(min-width:24em){
+  nav li{display:inline}
+}
+
+blockquote{border-left:6px solid #bbb;margin-left:0;padding-left:1em}
+
+code,pre{font-family:monospace,monospace}
+
+pre,p code{border:1px solid #bbb;padding:0 .1em}
+
+pre{overflow:auto visible;padding:.5rem}

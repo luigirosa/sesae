@@ -14,6 +14,7 @@
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20211206 aggiunta DNS, MX
  * 20211211 nocache, content type, hash ssl, organizzzione ssl
+ * 20220109 cambio da home a pagina di mosgtra dati
  *
  * This file is part of SESAE.
  *
@@ -48,20 +49,21 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
 		<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:b' />
-		<link rel='stylesheet' href='static/style.css' type='text/css'/>
+		<link rel='stylesheet' href='static/mostradati.css' type='text/css'/>
 		<meta http-equiv='X-UA-Compatible' content='IE=edge'/>
 		<meta name='viewport' content='width=device-width, initial-scale=1'/>
 		<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
 		<title>SESAE</title>
 	</head>
 	<body>
-		<h1><a href="https://sesae.com/">SESAE</a></h1>
+		<h1><a href="index.html">SESAE</a></h1>
 		<div class="contenitorecolonne">
 		<div class="colindice">
 				<?php
 					$q = $db->query("SELECT idcategory,category FROM category WHERE enabled='1' ORDER BY weight");
+					echo  "\n<div class='linavigatore'><a href='mostradati.php' class='linavigatore'>Tutto</a></div>";
 					while ($r = $q->fetch_array()) {
-						echo  "\n<div class='linavigatore'><a href='index.php?c=$r[idcategory]' class='linavigatore'>$r[category]</a></div>";
+						echo  "\n<div class='linavigatore'><a href='mostradati.php?c=$r[idcategory]' class='linavigatore'>$r[category]</a></div>";
 					}
 				?>
 			</div>
