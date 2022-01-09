@@ -98,7 +98,7 @@ define('ST_ASIPV6',              8);
 define('ST_POWEREDBY',           9);
 define('ST_GEN_AS4UNIVOCI',     10);
 define('ST_COUNTRYIPV4',        11);
-define('ST_COUNTRYIPV6',        21); // ultimo
+define('ST_COUNTRYIPV6',        21); 
 define('ST_SSLISSUER',          12);
 define('ST_SSLHASH',            13);
 define('ST_CONTENTTYPE',        14);
@@ -106,6 +106,9 @@ define('ST_DNS',                15);
 define('ST_MX',                 16);
 define('ST_GEN_AS6UNIVOCI',     17);
 define('ST_GENERATOR',          19);
+define('ST_GOOG_UA_COUNT',      22);
+define('ST_GOOG_ASYNC_COUNT',   23);
+define('ST_GOOG_TAG_COUNT',     24);
 
 //array con gli algoritmi delle statistiche
 $aAlgoStat = array('RPL'=>'Sostituisci il testo','RGX'=>'RegEx');

@@ -93,6 +93,24 @@ $r = $db->query("SELECT COUNT(*)
                  JOIN http_html ON http_html.idtarget=target.idtarget
                  WHERE http_html.http_html LIKE '%<iframe%' OR http_html.http_html LIKE '%<frameset%'")->fetch_array();
 storicizza($today, 0, ST_GEN_CONFRAME, $r[0]);
+// Google Analytics Tracking Code (UA)
+$r = $db->query("SELECT COUNT(targetdata.goog_analytics)
+                 FROM target
+								 JOIN targetdata ON targetdata.idtarget=target.idtarget
+								 WHERE targetdata.goog_analytics<>''")->fetch_array();
+storicizza($today, 0, ST_GOOG_UA_COUNT, $r[0]);
+// Google Analytics Tag Manager
+$r = $db->query("SELECT COUNT(targetdata.goog_tag)
+                 FROM target
+								 JOIN targetdata ON targetdata.idtarget=target.idtarget
+								 WHERE targetdata.goog_tag<>''")->fetch_array();
+storicizza($today, 0, ST_GOOG_TAG_COUNT, $r[0]);
+// Google Analytics Asynchronous tracking
+$r = $db->query("SELECT COUNT(targetdata.goog_asy)
+                 FROM target
+								 JOIN targetdata ON targetdata.idtarget=target.idtarget
+								 WHERE targetdata.goog_asy<>''")->fetch_array();
+storicizza($today, 0, ST_GOOG_ASYNC_COUNT, $r[0]);
 // http server
 $r = $db->query("SELECT limiteminimo FROM campostorico WHERE idcampostorico=" . ST_HTTPSERVER)->fetch_array();
 $limiteminimo = $r[0];
@@ -418,6 +436,24 @@ while ($rr = $qq->fetch_array()) {
 	while ($r = $q->fetch_array()) {
 		storicizza($today, $rr['idcategory'], ST_ASIPV6, $r['c'], $r['as']);
 	}
+	// Google Analytics Tracking Code (UA)
+	$r = $db->query("SELECT COUNT(targetdata.goog_analytics)
+									FROM target
+									JOIN targetdata ON targetdata.idtarget=target.idtarget
+									WHERE target.idcategory='$rr[idcategory]' AND targetdata.goog_analytics<>''")->fetch_array();
+	storicizza($today, $rr['idcategory'], ST_GOOG_UA_COUNT, $r[0]);
+	// Google Analytics Tag Manager
+	$r = $db->query("SELECT COUNT(targetdata.goog_tag)
+									FROM target
+									JOIN targetdata ON targetdata.idtarget=target.idtarget
+									WHERE target.idcategory='$rr[idcategory]' AND targetdata.goog_tag<>''")->fetch_array();
+	storicizza($today, $rr['idcategory'], ST_GOOG_TAG_COUNT, $r[0]);
+	// Google Analytics Asynchronous tracking
+	$r = $db->query("SELECT COUNT(targetdata.goog_asy)
+									FROM target
+									JOIN targetdata ON targetdata.idtarget=target.idtarget
+									WHERE target.idcategory='$rr[idcategory]' AND targetdata.goog_asy<>''")->fetch_array();
+	storicizza($today, $rr['idcategory'], ST_GOOG_ASYNC_COUNT, $r[0]);
 
 }
 
