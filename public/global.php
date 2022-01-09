@@ -166,7 +166,7 @@ function cache_dati($quale, $nocache = '') {
 		                     $whw")->fetch_array();
 				$b .=   "\n<tr><td align='left'><b>Google Analytics Tag Manager univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tutti, 2, ',', '.') . "%</td></tr>";
 				// Google Analytics Asynchronous tracking 
-				$r = $db->query("SELECT COUNT(DISTINCT targetdata.goog_async)
+				$r = $db->query("SELECT COUNT(DISTINCT targetdata.goog_asy)
                          FROM target 
 	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
 		                     $whw")->fetch_array();
