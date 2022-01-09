@@ -163,7 +163,7 @@ function cache_dati($quale, $nocache = '') {
                          FROM target 
 	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
 		                     $whw")->fetch_array();
-				$b .=   "\n<tr><td align='left'><b>Google Analytics Tracking Code (UA) univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tuttig, 2, ',', '.') . "%</td></tr>";
+				$b .=   "\n<tr><td align='left'><b>Google Analytics Tracking Code (UA) univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . " su " . number_format($tuttig, 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tuttig, 2, ',', '.') . "%</td></tr>";
 				// Google Analytics Tag Manager
 				$r = $db->query("SELECT COUNT(targetdata.goog_tag)
                          FROM target 
@@ -174,7 +174,7 @@ function cache_dati($quale, $nocache = '') {
                          FROM target 
 	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
 		                     $whw")->fetch_array();
-				$b .=   "\n<tr><td align='left'><b>Google Analytics Tag Manager univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tuttig, 2, ',', '.') . "%</td></tr>";
+				$b .=   "\n<tr><td align='left'><b>Google Analytics Tag Manager univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . " su " . number_format($tuttig, 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tuttig, 2, ',', '.') . "%</td></tr>";
 				// Google Analytics Asynchronous tracking 
 				$r = $db->query("SELECT COUNT(targetdata.goog_asy)
                          FROM target 
@@ -185,7 +185,7 @@ function cache_dati($quale, $nocache = '') {
                          FROM target 
 	                       JOIN targetdata ON targetdata.idtarget=target.idtarget
 		                     $whw")->fetch_array();
-				$b .=   "\n<tr><td align='left'><b>Google Analytics Asynchronous Tracking univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tuttig, 2, ',', '.') . "%</td></tr>";
+				$b .=   "\n<tr><td align='left'><b>Google Analytics Asynchronous Tracking univoci</b></td><td align='right'>". number_format($r[0], 0, ',', '.') . " su " . number_format($tuttig, 0, ',', '.') . "</td><td align='right'>&nbsp;" . number_format(100 * $r[0] / $tuttig, 2, ',', '.') . "%</td></tr>";
 
 				$b .=   "\n</table>";
 				$b .= "\n<!-- CH_STATGEN "	. date("j/n/Y G:i:s") . " -->\n";
