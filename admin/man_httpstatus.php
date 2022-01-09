@@ -106,7 +106,7 @@ $q = $db->query("SELECT target.idtarget,target.description,target.url,target.ena
                  FROM target
                  JOIN targetdata ON target.idtarget=targetdata.idtarget
                  WHERE target.checked='0' AND $filtro
-                 ORDER BY target.visited");
+                 ORDER BY target.visited DESC");
 
 if ($q->num_rows > 0) {
 	if ($displayresetzero) {

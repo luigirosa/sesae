@@ -49,7 +49,7 @@ $q = $db->query("SELECT meta.idtarget,meta.raw
                  FROM meta 
                  JOIN target ON meta.idtarget=target.idtarget
                  WHERE target.checked='0' AND meta.raw LIKE '%refresh%' AND meta.raw LIKE '%url%' AND (meta.raw LIKE '%http:%' OR meta.raw LIKE '%https:%')
-                 ORDER BY target.visited");
+                 ORDER BY target.visited DESC");
 
 if ($q->num_rows > 0) {
 	echo "\n<table border='0' align='center'>";
