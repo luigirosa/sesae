@@ -61,8 +61,7 @@ $q = $db->query("SELECT target.idtarget,target.idcategory,target.description,tar
                  FROM target
                  JOIN targetdata ON target.idtarget=targetdata.idtarget
                  JOIN ip AS ipv4 ON target.idipv4=ipv4.idip
-                 JOIN ip AS ipv6 ON target.idipv6=ipv6.idip
-                 LIMIT 100");
+                 JOIN ip AS ipv6 ON target.idipv6=ipv6.idip");
 while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
