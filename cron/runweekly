@@ -1,0 +1,7 @@
+#!/bin/bash
+
+php runweekly.php
+
+cd ../public/dati
+zip categorie.zip licenza.txt categorie.csv
+zip -z categorie.zip < licenza.txt

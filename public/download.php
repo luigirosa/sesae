@@ -11,7 +11,7 @@
 	</head>
 	<body>
     <header>
-      <h1>SESAE</h1>
+      <h1>SESAE - Download</h1>
       <nav>
         <ul class="lista-nostile">
           <li><a rel="home" href="index.html" title="pagina principale">Home</a></li>
@@ -24,7 +24,14 @@
     </header>
     <section>
       <p>Da questa pagina sar&agrave; possibile scaricare i dataset dei dati raccolti per poterli elaborare e pubblicare in proprio secondo la licenza <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>.</p>
-      <p>Datemi solo il tempo di scrivere la procedura di export JSON.</p>
+      <table border=0 cellpadding=4 cellspacing=0>
+        <tr>
+          <td><a href="dati/categorie.zip">categorie.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/categorie.zip")) ?></td>
+          <td><?php echo number_format(filesize("dati/categorie.zip"), 0, ',', '.') ?></td>
+          <td>Categorie dei target</td>
+        </tr>  
+      </table>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>

@@ -14,7 +14,7 @@
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20211206 aggiunta DNS, MX
  * 20211211 nocache, content type, hash ssl, organizzzione ssl
- * 20220109 cambio da home a pagina di mosgtra dati
+ * 20220109 cambio da home a pagina di mostra dati
  *
  * This file is part of SESAE.
  *

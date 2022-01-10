@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * SESAE - Manutenzione giornaliera
+ *
+ * @package     SESAE
+ * @subpackage  SESAE Cron
+ * @author      Luigi Rosa (lists@luigirosa.com)
+ * @copyright   (C) 2022 Luigi Rosa <lists@luigirosa.com>
+ * @license     https://www.gnu.org/licenses/gpl-3.0.html   
+ *
+ * 20210109 prima versione
+ *
+ * This file is part of SESAE.
+ *
+ * SESAE is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SESAE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SESAE.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+ 
+define('SESAE', TRUE);
+define('SKIPCHECK', TRUE);
+
+require('../admin/global.php');
+
+$outdir = '../public/dati/';
+
+//
+// esportazione JSON
+//
+// categorie
+$f = fopen($outdir . 'categorie.csv', 'w');
+fputcsv($f, ['idcategory','category']);
+$q = $db->query("SELECT idcategory,category FROM category WHERE enabled=1");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+
+fclose($f);
+// target
+$q = $db->query("SELECT target.idtarget,target.idcategory,target.description,target.url,target.visited,target.counter,target.external_id,
+                        targetdata.http_code,targetdata.http_contenttype,targetdata.http_server,targetdata.ishttps,targetdata.https_certname,targetdata.https_subject,targetdata.https_issuer,targetdata.https_validto,targetdata.https_issuerorg,targetdata.https_signature,targetdata.html_title,targetdata.goog_analytics,targetdata.goog_tag,targetdata.goog_asy,
+                        ipv4.ip AS ipv4_ip,ipv4.continent AS ipv4_continente,ipv4.countrycode AS ipv4_codicestato,ipv4.isp AS ipv4_isp,ipv4.org AS ipv4_org,ipv4.`as` AS ipv4_as,ipv4.asname AS ipv4_asname,ipv4.reverse AS ipv4_reverse,ipv4.ishosting AS ipv4_ishosting,ipv4.asowner AS ipv4_asowner,
+                        ipv6.ip AS ipv6_ip,ipv4.continent AS ipv6_continente,ipv6.countrycode AS ipv6_codicestato,ipv6.isp AS ipv6_isp,ipv4.org AS ipv6_org,ipv4.`as` AS ipv6_as,ipv6.asname AS ipv6_asname,ipv6.reverse AS ipv6_reverse,ipv6.ishosting AS ipv6_ishosting,ipv6.asowner AS ipv6_asowner
+                 FROM target
+                 JOIN targetdata ON target.idtarget=targetdata.idtarget
+                 JOIN ip AS ipv4 ON target.idipv4=ipv4.idip
+                 JOIN ip AS ipv6 ON target.idipv6=ipv6.idip
+                 LIMIT 20");
+while ($r = $q->fetch_assoc()) {
+  //
+}
+
