@@ -76,4 +76,14 @@ while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
 fclose($f);
+// generator
+$f = fopen($outdir . 'generator.csv', 'w');
+fputcsv($f, ['idtarget','http_generator','http_generator_stat','http_generator_stat_fam']);
+$q = $db->query("SELECT target.idtarget,http_generator.http_generator,http_generator.http_generator_stat,http_generator.http_generator_stat_fam
+                 FROM target
+                 JOIN http_generator ON target.idtarget=http_generator.idtarget");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+fclose($f);
 

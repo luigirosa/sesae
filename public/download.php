@@ -27,22 +27,28 @@
       <p><b>Il resto delle tabelle verr&agrave; pubblicato a giorni.</b></p>
       <table border=0 cellpadding=4 cellspacing=0>
         <tr>
-          <td><a href="dati/categorie.zip">categorie.zip</a></td>
-          <td><?php echo date("d/m/Y", filemtime("dati/categorie.zip")) ?></td>
-          <td align="right"><?php echo number_format(filesize("dati/categorie.zip"), 0, ',', '.') ?></td>
-          <td>Categorie dei target, campo di join con la tabella <code>target</code>: <code>idcategory</code></td>
-        </tr>  
-        <tr>
           <td><a href="dati/target.zip">target.zip</a></td>
           <td><?php echo date("d/m/Y", filemtime("dati/target.zip")) ?></td>
           <td align="right"><?php echo number_format(filesize("dati/target.zip"), 0, ',', '.') ?></td>
-          <td>Dati dei siti analizzati, questo &egrave; il file principale che state cercando</td>
+          <td>Dati dei siti analizzati, questo &egrave; probabilmente il file che state cercando, le altre tabelle hanno campi legati a questa tabella</td>
         </tr>  
+        <tr>
+          <td><a href="dati/categorie.zip">categorie.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/categorie.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/categorie.zip"), 0, ',', '.') ?></td>
+          <td>Categorie dei target, campo di join: <code>idcategory</code></td>
+        </tr>
         <tr>
           <td><a href="dati/dns.zip">dns.zip</a></td>
           <td><?php echo date("d/m/Y", filemtime("dati/dns.zip")) ?></td>
           <td align="right"><?php echo number_format(filesize("dati/dns.zip"), 0, ',', '.') ?></td>
           <td>DNS autoritari, campo di join: <code>idtarget</code></td>
+        </tr>  
+        <tr>
+          <td><a href="dati/generator.zip">generator.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/generator.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/generator.zip"), 0, ',', '.') ?></td>
+          <td>HTML generator, campo di join: <code>idtarget</code></td>
         </tr>  
       </table>
       <p>I testi sono codificati in UTF-8, tenetelo presente quando importate i file.</p>
