@@ -7,3 +7,7 @@ cd ../public/dati
 zip -X categorie.zip licenza.txt categorie.csv
 zip -z categorie.zip < licenza.txt
 rm -f categorie.csv
+
+zip -X target.zip licenza.txt target.csv
+zip -z target.zip < licenza.txt
+rm -f target.csv

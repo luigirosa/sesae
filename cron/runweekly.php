@@ -45,9 +45,15 @@ $q = $db->query("SELECT idcategory,category FROM category WHERE enabled=1");
 while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
-
 fclose($f);
 // target
+$f = fopen($outdir . 'target.csv', 'w');
+fputcsv($f, ['idtarget','idcategory','description','url','visited','counter','external_id','http_code','http_contenttype',
+              'http_server','ishttps','https_certname','https_subject','https_issuer','https_validto','https_issuerorg',
+              'https_signature','html_title','goog_analytics','goog_tag','goog_asy','ipv4_ip','ipv4_continente','ipv4_codicestato',
+              'ipv4_isp','ipv4_org','ipv4_as','ipv4_asname','ipv4_reverse','ipv4_ishosting','ipv4_asowner','ipv6_ip',
+              'ipv6_continente','ipv6_codicestato','ipv6_isp','ipv6_org','ipv6_as','ipv6_asname','ipv6_reverse','ipv6_ishosting',
+              'ipv6_asowner']);
 $q = $db->query("SELECT target.idtarget,target.idcategory,target.description,target.url,target.visited,target.counter,target.external_id,
                         targetdata.http_code,targetdata.http_contenttype,targetdata.http_server,targetdata.ishttps,targetdata.https_certname,targetdata.https_subject,targetdata.https_issuer,targetdata.https_validto,targetdata.https_issuerorg,targetdata.https_signature,targetdata.html_title,targetdata.goog_analytics,targetdata.goog_tag,targetdata.goog_asy,
                         ipv4.ip AS ipv4_ip,ipv4.continent AS ipv4_continente,ipv4.countrycode AS ipv4_codicestato,ipv4.isp AS ipv4_isp,ipv4.org AS ipv4_org,ipv4.`as` AS ipv4_as,ipv4.asname AS ipv4_asname,ipv4.reverse AS ipv4_reverse,ipv4.ishosting AS ipv4_ishosting,ipv4.asowner AS ipv4_asowner,
@@ -56,8 +62,9 @@ $q = $db->query("SELECT target.idtarget,target.idcategory,target.description,tar
                  JOIN targetdata ON target.idtarget=targetdata.idtarget
                  JOIN ip AS ipv4 ON target.idipv4=ipv4.idip
                  JOIN ip AS ipv6 ON target.idipv6=ipv6.idip
-                 LIMIT 20");
+                 LIMIT 100");
 while ($r = $q->fetch_assoc()) {
-  //
+  fputcsv($f,$r);
 }
+fclose($f);
 

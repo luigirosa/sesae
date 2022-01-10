@@ -31,7 +31,20 @@
           <td><?php echo number_format(filesize("dati/categorie.zip"), 0, ',', '.') ?></td>
           <td>Categorie dei target</td>
         </tr>  
+        <tr>
+          <td><a href="dati/target.zip">target.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/target.zip")) ?></td>
+          <td><?php echo number_format(filesize("dati/target.zip"), 0, ',', '.') ?></td>
+          <td>Dati dei siti analizzati, questo &egrave; il file principale che state cercando</td>
+        </tr>  
       </table>
+      <p>I testi sono codificati in UTF-8, tenetelo presente quando importate i file.</p>
+      <p>Quando Microsoft Excel localizzato in italiano apre un file CSV presume che sia separato da punto e virgola anzich&eacute; da virgola, 
+         ignorando completamnte il significato di <b>Comma</b>-Separated Values.
+         Per risolvere il problema, consultare <a href="https://support.microsoft.com/it-it/office/importare-o-esportare-file-di-testo-txt-o-csv-5250ac4c-663c-47ce-937b-339e391393ba">questa pagina del manuale di Excel</a>, 
+         oppure il <a href="https://support.microsoft.com/it-it/office/importazione-guidata-testo-c5b02af6-fda1-4440-899f-f78bafe41857">dettaglio dell'importazione guidata testo</a>.<br/>
+         O, molto pi&ugrave; semplicemente, usate LibreOffice Calc.
+      </p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
