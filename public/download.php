@@ -62,6 +62,12 @@
           <td align="right"><?php echo number_format(filesize("dati/generator.zip"), 0, ',', '.') ?></td>
           <td>HTML generator, campo di join: <code>idtarget</code></td>
         </tr>
+        <tr>
+          <td><a href="dati/mx.zip">generator.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/mx.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/mx.zip"), 0, ',', '.') ?></td>
+          <td>SMTP mail exchanger, campo di join: <code>idtarget</code></td>
+        </tr>
       </table>
       <p>I testi sono codificati in UTF-8, tenetelo presente quando importate i file.</p>
       <p>Quando Microsoft Excel localizzato in italiano apre un file CSV presume che sia separato da punto e virgola anzich&eacute; da virgola, 

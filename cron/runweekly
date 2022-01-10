@@ -27,3 +27,7 @@ rm -f header.csv
 zip -X httpserver.zip licenza.txt httpserver.csv
 zip -z httpserver.zip < licenza.txt
 rm -f httpserver.csv
+
+zip -X mx.zip licenza.txt mx.csv
+zip -z mx.zip < licenza.txt
+rm -f mx.csv

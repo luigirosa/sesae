@@ -106,4 +106,15 @@ while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
 fclose($f);
+// mx
+$f = fopen($outdir . 'mx.csv', 'w');
+fputcsv($f, ['idtarget','http_server','http_server_stat','http_server_stat_fam']);
+$q = $db->query("SELECT target.idtarget,mxserver.mxserver,mxserver.mxserver_real,mxserver.mxserver_stat,mxserver.isesmtp
+                 FROM target
+                 JOIN targetmx ON target.idtarget=targetmx.idtarget
+                 JOIN mxserver ON targetmx.idmxserver=mxserver.idmxserver");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+fclose($f);
 
