@@ -19,3 +19,7 @@ rm -f dns.csv
 zip -X generator.zip licenza.txt generator.csv
 zip -z generator.zip < licenza.txt
 rm -f generator.csv
+
+zip -X header.zip licenza.txt header.csv
+zip -z header.zip < licenza.txt
+rm -f header.csv

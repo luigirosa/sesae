@@ -86,4 +86,14 @@ while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
 fclose($f);
+// header
+$f = fopen($outdir . 'header.csv', 'w');
+fputcsv($f, ['idtarget','http_header']);
+$q = $db->query("SELECT target.idtarget,http_header.http_header
+                 FROM target
+                 JOIN http_header ON target.idtarget=http_header.idtarget");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+fclose($f);
 
