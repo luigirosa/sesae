@@ -57,11 +57,11 @@ fputcsv($f, ['idtarget','idcategory','description','url','visited','counter','ex
 $q = $db->query("SELECT target.idtarget,target.idcategory,target.description,target.url,target.visited,target.counter,target.external_id,
                         targetdata.http_code,targetdata.http_contenttype,targetdata.http_server,targetdata.ishttps,targetdata.https_certname,targetdata.https_subject,targetdata.https_issuer,targetdata.https_validto,targetdata.https_issuerorg,targetdata.https_signature,targetdata.html_title,targetdata.goog_analytics,targetdata.goog_tag,targetdata.goog_asy,
                         ipv4.ip AS ipv4_ip,ipv4.continent AS ipv4_continente,ipv4.countrycode AS ipv4_codicestato,ipv4.isp AS ipv4_isp,ipv4.org AS ipv4_org,ipv4.`as` AS ipv4_as,ipv4.asname AS ipv4_asname,ipv4.reverse AS ipv4_reverse,ipv4.ishosting AS ipv4_ishosting,ipv4.asowner AS ipv4_asowner,
-                        ipv6.ip AS ipv6_ip,ipv4.continent AS ipv6_continente,ipv6.countrycode AS ipv6_codicestato,ipv6.isp AS ipv6_isp,ipv4.org AS ipv6_org,ipv4.`as` AS ipv6_as,ipv6.asname AS ipv6_asname,ipv6.reverse AS ipv6_reverse,ipv6.ishosting AS ipv6_ishosting,ipv6.asowner AS ipv6_asowner
+                        ipv6.ip AS ipv6_ip,ipv4.continent AS ipv6_continente,ipv6.countrycode AS ipv6_codicestato,ipv6.isp AS ipv6_isp,ipv6.org AS ipv6_org,ipv6.`as` AS ipv6_as,ipv6.asname AS ipv6_asname,ipv6.reverse AS ipv6_reverse,ipv6.ishosting AS ipv6_ishosting,ipv6.asowner AS ipv6_asowner
                  FROM target
-                 JOIN targetdata ON target.idtarget=targetdata.idtarget
-                 JOIN ip AS ipv4 ON target.idipv4=ipv4.idip
-                 JOIN ip AS ipv6 ON target.idipv6=ipv6.idip");
+                 LEFT JOIN targetdata ON target.idtarget=targetdata.idtarget
+                 LEFT JOIN ip AS ipv4 ON target.idipv4=ipv4.idip
+                 LEFT JOIN ip AS ipv6 ON target.idipv6=ipv6.idip");
 while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
