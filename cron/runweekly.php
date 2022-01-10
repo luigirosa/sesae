@@ -96,4 +96,14 @@ while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }
 fclose($f);
+// httpserver
+$f = fopen($outdir . 'httpserver.csv', 'w');
+fputcsv($f, ['idtarget','http_server','http_server_stat','http_server_stat_fam']);
+$q = $db->query("SELECT target.idtarget,http_server.http_server,http_server.http_server_stat,http_server.http_server_stat_fam
+                 FROM target
+                 JOIN http_server ON target.idtarget=http_server.idtarget");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+fclose($f);
 

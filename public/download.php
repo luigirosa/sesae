@@ -45,16 +45,22 @@
           <td>DNS autoritari, campo di join: <code>idtarget</code></td>
         </tr>
         <tr>
-          <td><a href="dati/generator.zip">generator.zip</a></td>
-          <td><?php echo date("d/m/Y", filemtime("dati/generator.zip")) ?></td>
-          <td align="right"><?php echo number_format(filesize("dati/generator.zip"), 0, ',', '.') ?></td>
-          <td>HTML generator, campo di join: <code>idtarget</code></td>
+          <td><a href="dati/httpserver.zip">httpserver.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/httpserver.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/httpserver.zip"), 0, ',', '.') ?></td>
+          <td>Server http, campo di join: <code>idtarget</code></td>
         </tr>
         <tr>
           <td><a href="dati/header.zip">header.zip</a></td>
           <td><?php echo date("d/m/Y", filemtime("dati/header.zip")) ?></td>
           <td align="right"><?php echo number_format(filesize("dati/header.zip"), 0, ',', '.') ?></td>
           <td>Header trasmessi dal server http, campo di join: <code>idtarget</code></td>
+        </tr>
+        <tr>
+          <td><a href="dati/generator.zip">generator.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/generator.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/generator.zip"), 0, ',', '.') ?></td>
+          <td>HTML generator, campo di join: <code>idtarget</code></td>
         </tr>
       </table>
       <p>I testi sono codificati in UTF-8, tenetelo presente quando importate i file.</p>

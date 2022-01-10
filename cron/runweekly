@@ -23,3 +23,7 @@ rm -f generator.csv
 zip -X header.zip licenza.txt header.csv
 zip -z header.zip < licenza.txt
 rm -f header.csv
+
+zip -X httpserver.zip licenza.txt httpserver.csv
+zip -z httpserver.zip < licenza.txt
+rm -f httpserver.csv
