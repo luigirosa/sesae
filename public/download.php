@@ -24,7 +24,6 @@
     </header>
     <section>
       <p>Da questa pagina &egrave; possibile scaricare i dataset dei dati raccolti per poterli elaborare e pubblicare in proprio secondo la licenza <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>.</p>
-      <p><b>Il resto delle tabelle verr&agrave; pubblicato a giorni.</b></p>
       <table border=0 cellpadding=4 cellspacing=0>
         <tr>
           <td><a href="dati/target.zip">target.zip</a></td>
