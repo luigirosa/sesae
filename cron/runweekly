@@ -11,3 +11,7 @@ rm -f categorie.csv
 zip -X target.zip licenza.txt target.csv
 zip -z target.zip < licenza.txt
 rm -f target.csv
+
+zip -X dns.zip licenza.txt dns.csv
+zip -z dns.zip < licenza.txt
+rm -f dns.csv
