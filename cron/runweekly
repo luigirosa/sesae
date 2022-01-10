@@ -31,3 +31,7 @@ rm -f httpserver.csv
 zip -X mx.zip licenza.txt mx.csv
 zip -z mx.zip < licenza.txt
 rm -f mx.csv
+
+zip -X poweredby.zip licenza.txt poweredby.csv
+zip -z poweredby.zip < licenza.txt
+rm -f poweredby.csv
