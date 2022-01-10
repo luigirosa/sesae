@@ -71,7 +71,7 @@ $f = fopen($outdir . 'dns.csv', 'w');
 fputcsv($f, ['idtarget','dnsauth','dnsauth_stat']);
 $q = $db->query("SELECT target.idtarget,dnsauth.dnsauth,dnsauth.dnsauth_stat
                  FROM target
-                 JOIN dnsauth ON target.idtarget=dns");
+                 JOIN dnsauth ON target.idtarget=dnsauth.idtarget");
 while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }

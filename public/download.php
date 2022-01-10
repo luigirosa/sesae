@@ -41,7 +41,7 @@
         <tr>
           <td><a href="dati/dns.zip">dns.zip</a></td>
           <td><?php echo date("d/m/Y", filemtime("dati/dns.zip")) ?></td>
-          <td align="right"><?php echo number_format(filesize("dati/target.zip"), 0, ',', '.') ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/dns.zip"), 0, ',', '.') ?></td>
           <td>DNS autoritari, campo di join: <code>idtarget</code></td>
         </tr>  
       </table>
