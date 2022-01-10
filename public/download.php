@@ -23,7 +23,7 @@
       </nav>
     </header>
     <section>
-      <p>Da questa pagina sar&agrave; possibile scaricare i dataset dei dati raccolti per poterli elaborare e pubblicare in proprio secondo la licenza <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>.</p>
+      <p>Da questa pagina &egrave; possibile scaricare i dataset dei dati raccolti per poterli elaborare e pubblicare in proprio secondo la licenza <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>.</p>
       <p><b>Il resto delle tabelle verr&agrave; pubblicato a giorni.</b></p>
       <table border=0 cellpadding=4 cellspacing=0>
         <tr>
@@ -67,6 +67,12 @@
           <td><?php echo date("d/m/Y", filemtime("dati/mx.zip")) ?></td>
           <td align="right"><?php echo number_format(filesize("dati/mx.zip"), 0, ',', '.') ?></td>
           <td>SMTP mail exchanger, campo di join: <code>idtarget</code></td>
+        </tr>
+        <tr>
+          <td><a href="dati/poweredby.zip">poweredby.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/poweredby.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/poweredby.zip"), 0, ',', '.') ?></td>
+          <td>Powered by (script engine lato server), campo di join: <code>idtarget</code></td>
         </tr>
       </table>
       <p>I testi sono codificati in UTF-8, tenetelo presente quando importate i file.</p>
