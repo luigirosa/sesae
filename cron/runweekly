@@ -37,3 +37,11 @@ rm -f mx.csv
 zip -X poweredby.zip licenza.txt poweredby.csv
 zip -z poweredby.zip < licenza.txt
 rm -f poweredby.csv
+
+zip -X campostorico.zip licenza.txt campostorico.csv
+zip -z campostorico.zip < licenza.txt
+rm -f campostorico.csv
+
+zip -X storicog.zip licenza.txt storicog.csv
+zip -z storicog.zip < licenza.txt
+rm -f storicog.csv

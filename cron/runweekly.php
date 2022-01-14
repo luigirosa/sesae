@@ -122,8 +122,21 @@ $f = fopen($outdir . 'poweredby.csv', 'w');
 fputcsv($f, ['idtarget','poweredby','poweredby_stat','poweredby_stat_fam']);
 $q = $db->query("SELECT target.idtarget,poweredby.poweredby,poweredby.poweredby_stat,poweredby.poweredby_stat_fam
                  FROM target
-                 JOIN poweredby ON target.idtarget=poweredby.idtarget
-");
+                 JOIN poweredby ON target.idtarget=poweredby.idtarget");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+// campostorico
+$f = fopen($outdir . 'campostorico.csv', 'w');
+fputcsv($f, ['idcampostorico','campostorico','limiteminimo']);
+$q = $db->query("SELECT * FROM campostorico");
+while ($r = $q->fetch_assoc()) {
+  fputcsv($f,$r);
+}
+// storico
+$f = fopen($outdir . 'storicog.csv', 'w');
+fputcsv($f, ['idstorico','data','idcategory','idcampostorico','valoreint','valorestr']);
+$q = $db->query("SELECT * FROM storico");
 while ($r = $q->fetch_assoc()) {
   fputcsv($f,$r);
 }

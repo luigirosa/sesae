@@ -73,6 +73,27 @@
           <td align="right"><?php echo number_format(filesize("dati/poweredby.zip"), 0, ',', '.') ?></td>
           <td>Powered by (script engine lato server), campo di join: <code>idtarget</code></td>
         </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td><a href="dati/campostorico.zip">campostorico.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/campostorico.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/campostorico.zip"), 0, ',', '.') ?></td>
+          <td>Tabella dei campi storici con id e descrizione</td>
+        </tr>
+        <tr>
+          <td><a href="dati/storicog.zip">storicog.zip</a></td>
+          <td><?php echo date("d/m/Y", filemtime("dati/storicog.zip")) ?></td>
+          <td align="right"><?php echo number_format(filesize("dati/storicog.zip"), 0, ',', '.') ?></td>
+          <td>Dati storici giornalieri a partire da inizio 2022.<br/>
+              Campo di join per il tipo di dato con la tabella <code>campostorico</code>: <code>idcampostorico</code><br/>
+              Campo di join per la categoria tipo di dato con la tabella <code>categorie</code>: <code>idcategory</code> (se idcategory=0, il dato &egrave; riferito a tutte le categorie)
+          </td>
+        </tr>
       </table>
       <p>I testi sono codificati in UTF-8, tenetelo presente quando importate i file.</p>
       <p>Quando Microsoft Excel localizzato in italiano apre un file CSV presume che sia separato da punto e virgola anzich&eacute; da virgola, 
@@ -87,6 +108,7 @@
     </section>
     <footer id="site-footer">
       <p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+      <p>Per info e suggerimenti: <img src="static/sesaeaddr.png" border="0" alt="anti harvesting" /></p>
       <p>Copyright &copy; 2022 Luigi Rosa</p>
     </footer>    
   </body>
