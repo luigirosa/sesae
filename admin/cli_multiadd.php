@@ -47,7 +47,7 @@ if ($handle) {
 			$nome = preg_replace('#\s+#', ' ', $nome);
 			$qq = $db->query("SELECT description FROM target WHERE url='" . $b2->normalizza($url) . "'");
 			if ($qq->num_rows == 0) {
-				$hostname = calcolahostname($url);
+				$hostname = parse_url($url, PHP_URL_HOST);
 				$ip = trim(`/usr/bin/dig $hostname A +short`);
 				if ($ip != '' ) {
 					// ripulisco la descrizione

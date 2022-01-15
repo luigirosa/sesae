@@ -53,7 +53,7 @@ if (isset($_POST['sitelist'])) {
 			$urls = str_replace("http://", "https://", $url);
 			$qqs = $db->query("SELECT description FROM target WHERE url='" . $b2->normalizza($urls) . "'");
 			if ($qq->num_rows == 0 and $qqs->num_rows == 0) {
-				$hostname = calcolahostname($url);
+				$hostname = parse_url($url, PHP_URL_HOST);
 				$ip = trim(`/usr/bin/dig $hostname A +short`);
 				if ($ip != '' ) {
 					// ripulisco la descrizione

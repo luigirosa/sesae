@@ -688,7 +688,7 @@ function scantarget($idtarget, $idprobe = 0) {
 		$r['mailhost'] = '';
 	} 
 	
-	$r['hostname'] = calcolahostname($r['url']);
+	$r['hostname'] = parse_url($r['url'], PHP_URL_HOST);
 	aggiornacampo($idtarget, 'hostname', $r['hostname']);
 	$retval = "$r[hostname]\n";	
 	// popolaro mailhost
@@ -1016,26 +1016,6 @@ function scantarget($idtarget, $idprobe = 0) {
 	}
 	return ($retval);
 }
-
-
-/**
- * calcolahostname($url)
- * 
- * Ritorna l'hostname di un URL
- * 
- */
-function calcolahostname($url) {
-	$dove = strpos($url, '://');
-	$hostname = substr($url, $dove + 3);
-	$slash = strpos($hostname, '/');
-	if ($slash === FALSE) {
-		// nulla
-	} else {
-		$hostname = substr($hostname, 0, $slash);
-	}
-	return $hostname;
-}
-
 
 
 /**

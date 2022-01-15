@@ -148,7 +148,7 @@ if (isset($_POST['idtarget'])) {
 		// ricalcolo hostname
 		if ($idtarget > 0) {
 			$r = $db->query("SELECT url FROM target WHERE idtarget='$idtarget'")->fetch_array();
-			$hostname = calcolahostname($r['url']);
+			$hostname = parse_url($r['url'], PHP_URL_HOST);
 			$q = $db->query("SELECT idtarget FROM targetdata WHERE idtarget='$idtarget'");
 			if ($q->num_rows > 0) {
 				$db->query("UPDATE targetdata SET hostname='" . $b2->normalizza($hostname) . "' WHERE idtarget='$idtarget'");	
