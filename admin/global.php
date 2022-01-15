@@ -930,7 +930,7 @@ function scantarget($idtarget, $idprobe = 0) {
 				aggiornacampo($idtarget, 'https_validto', $acert['validTo_time_t']);
 				aggiornacampo($idtarget, 'https_signature', $acert['signatureTypeSN']);
 			} else {
-				$retval .= "!https not found\n";
+				$retval .= "!https not found $errno: $errstr\n";
 				aggiornacampo($idtarget, 'https_cert', "$errno: $errstr");
 				aggiornacampo($idtarget, 'https_certname', '');
 				aggiornacampo($idtarget, 'https_subject', '');
