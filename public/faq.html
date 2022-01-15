@@ -22,9 +22,33 @@
       </nav>
     </header>
       <article>
+      	<h2>Generali</h2>
         <p><b>Cosa significa SESAE?</b><br/>
            Nulla.<br/>
            Era uno dei nomi a dominio che avevo a disposizione e ho usato quello.
+        </p>
+      </article>
+      <article>
+      	<h2>IPv6</h2>
+        <p><b>Il sito xxx risolve il nome in AAAA ma nel database non &egrave; indicato come IPv6</b><br/>
+           Alcuni siti fanno i furbi oppure istanziano un template del provider.<br/> 
+           questi siti risolvono il record AAAA come CNAME il cui host vero non ha indirizzo IPv6, esempio tipico:
+           <pre> 
+$dig -t AAAA www.comune.osasco.to.it
+; <<>> DiG 9.11.26-RedHat-9.11.26-6.el8 <<>> -t AAAA www.comune.osasco.to.it
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
+;; QUESTION SECTION:
+;www.comune.osasco.to.it.       IN      AAAA
+;; ANSWER SECTION:
+www.comune.osasco.to.it. 900    IN      CNAME   comune.osasco.to.it.
+
+$ dig -t AAAA comune.osasco.to.it
+; <<>> DiG 9.11.26-RedHat-9.11.26-6.el8 <<>> -t AAAA comune.osasco.to.it
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+;; QUESTION SECTION:
+;comune.osasco.to.it.           IN      AAAA
+           </pre>
+           In questo caso SESAE se ne accorge e non flagga il sito com IPv6.
         </p>
       </article>
       <p>&nbsp;</p>
