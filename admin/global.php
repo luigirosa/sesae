@@ -917,7 +917,7 @@ function scantarget($idtarget, $idprobe = 0) {
 			aggiornacampo($idtarget, 'ishttps', 1);
 			$retval .= "-https\n";
 			$stream = stream_context_create (array("ssl" => array("capture_peer_cert" => TRUE, "SNI_enabled" => TRUE, "allow_self_signed"=>TRUE )));
-			if ($streamsocket = @stream_socket_client("ssl://$r[hostname]:443", $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $stream)) {
+			if ($streamsocket = @stream_socket_client("ssl://$r[hostname]:443", $errno, $errstr, 20, STREAM_CLIENT_CONNECT, $stream)) {
 				$retval .= "-https found\n";
 				$acont = stream_context_get_params($streamsocket);
 				openssl_x509_export($acont["options"]["ssl"]["peer_certificate"], $pem_cert);
