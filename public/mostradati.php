@@ -87,10 +87,11 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 			<div class="colcontenuto">
 				<?php
 					if ($displagraph) {
-						echo "\n<div class='contenitoregrafico'>";
 						echo "\n<div class='titolografico'></div>";
+						// numero siti
+						echo "\n<div class='contenitoregrafico'>";
 						echo "
-						<div class='grafico'><canvas id='chNumeroSiti' width='100' height='50'></canvas></div>
+						<div class='grafico' style='position: relative; height:200px'><canvas id='chNumeroSiti'></canvas></div>
 						<script>
 							const ctx = document.getElementById('chNumeroSiti');
 							const myChart = new Chart(ctx, {
@@ -114,25 +115,65 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						        borderColor: 'rgb(75, 192, 192)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
-						          }]
-						       },
-						       options: {
-						       	legend: {
-						       		display: false
-						       	},
-						       	scales: {
-						       		xAxes: [
+						          }]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Numero di siti analizzati' },
+ 												legend: {display: false, },
+									    },
+									  scales: {
+									    xAxes: [
 						       			{
-						       				ticks: {
-						       					autoSkip: false,
-						       					maxRotation: 90,
-						       					minRotation: 00
-						       				}
+						       			  ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 }
 						       			}
 						       		]
-						       	}
-						       }
-						       });
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						// numero siti in https
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:200px'><canvas id='chNumeroSitiHttps'></canvas></div>
+						<script>
+							const ctx_https = document.getElementById('chNumeroSitiHttps');
+							const myChart_https = new Chart(ctx_https, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT `data` FROM `storico` WHERE idcampostorico=2 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						echo "\n datasets: [{
+            label: 'Numero di siti',";
+						echo "\n data: [";
+						$a = array();
+						$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=2 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+						echo (implode(',', $a));
+						echo "],";
+						echo "\nfill: false,
+						        borderColor: 'rgb(75, 192, 192)',
+						        borderJoinStyle: 'miter',
+						        tension: 0.1
+						          }]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Numero di siti in HTTPS' },
+ 												legend: {display: false, },
+									    },
+									  scales: {
+									    xAxes: [
+						       			{
+						       			  ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 }
+						       			}
+						       		]
+						       	 }
+						       }  });
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
 						

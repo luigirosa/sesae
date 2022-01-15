@@ -914,6 +914,7 @@ function scantarget($idtarget, $idprobe = 0) {
 		$pem_cert = '';
 		$pem_chain = '';
 		if ('https' == substr($r['url'], 0, 5)) {
+			aggiornacampo($idtarget, 'ishttps', 1);
 			$retval .= "-https\n";
 			$stream = stream_context_create (array("ssl" => array("capture_peer_cert" => TRUE, "SNI_enabled" => TRUE, "allow_self_signed"=>TRUE )));
 			if ($streamsocket = @stream_socket_client("ssl://$r[hostname]:443", $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $stream)) {
@@ -921,7 +922,6 @@ function scantarget($idtarget, $idprobe = 0) {
 				$acont = stream_context_get_params($streamsocket);
 				openssl_x509_export($acont["options"]["ssl"]["peer_certificate"], $pem_cert);
 				$acert = openssl_x509_parse($pem_cert);
-				aggiornacampo($idtarget, 'ishttps', 1);
 				aggiornacampo($idtarget, 'https_cert', json_encode($acert, JSON_UNESCAPED_UNICODE));
 				aggiornacampo($idtarget, 'https_certname', $acert['name']);
 				aggiornacampo($idtarget, 'https_subject', $acert['subject']['CN']);
@@ -931,7 +931,6 @@ function scantarget($idtarget, $idprobe = 0) {
 				aggiornacampo($idtarget, 'https_signature', $acert['signatureTypeSN']);
 			} else {
 				$retval .= "!https not found\n";
-				aggiornacampo($idtarget, 'ishttps', 0);
 				aggiornacampo($idtarget, 'https_cert', "$errno: $errstr");
 				aggiornacampo($idtarget, 'https_certname', '');
 				aggiornacampo($idtarget, 'https_subject', '');
@@ -941,7 +940,6 @@ function scantarget($idtarget, $idprobe = 0) {
 				aggiornacampo($idtarget, 'https_signature', '');
 			}
 		} else {
-			aggiornacampo($idtarget, 'ishttps', 0);
 			aggiornacampo($idtarget, 'https_cert', '');
 			aggiornacampo($idtarget, 'https_certname', '');
 			aggiornacampo($idtarget, 'https_subject', '');
