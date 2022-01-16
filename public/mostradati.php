@@ -123,11 +123,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
  												legend: {display: false, },
 									    },
 									  scales: {
-									    xAxes: [
-						       			{
-						       			  ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 }
-						       			}
-						       		]
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
 						       	 }
 						       }  });
 					   	    </script>";
@@ -148,7 +144,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\n datasets: [{
-            label: 'Numero di siti',";
+            label: 'Numero di siti in HTTPS',";
 						echo "\n data: [";
 						$a = array();
 						$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=2 $wha ORDER BY `data`");
@@ -167,11 +163,47 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
  												legend: {display: false, },
 									    },
 									  scales: {
-									    xAxes: [
-						       			{
-						       			  ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 }
-						       			}
-						       		]
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						// numero siti in IPv6
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:200px'><canvas id='chNumeroSitiIPv6'></canvas></div>
+						<script>
+							const ctx_ipv6 = document.getElementById('chNumeroSitiIPv6');
+							const myChart_ipv6 = new Chart(ctx_ipv6, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT `data` FROM `storico` WHERE idcampostorico=3 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						echo "\n datasets: [{
+            label: 'Numero di siti in IPv6',";
+						echo "\n data: [";
+						$a = array();
+						$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=3 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+						echo (implode(',', $a));
+						echo "],";
+						echo "\nfill: false,
+						        borderColor: 'rgb(75, 192, 192)',
+						        borderJoinStyle: 'miter',
+						        tension: 0.1
+						          }]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Numero di siti in IPv6' },
+ 												legend: {display: false, },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
 						       	 }
 						       }  });
 					   	    </script>";
