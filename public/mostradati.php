@@ -328,6 +328,46 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						       }  });
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
+						// numero in hosting/colo
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:200px'><canvas id='chhosting'></canvas></div>
+						<script>
+							const ctx_hosting = document.getElementById('chhosting');
+							const myChart_hosting = new Chart(ctx_hosting, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT `data` FROM `storico` WHERE idcampostorico=6 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						echo "\n datasets: [{
+            label: 'In hosting/colocation',";
+						echo "\n data: [";
+						$a = array();
+						$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=6 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+						echo (implode(',', $a));
+						echo "],";
+						echo "\nfill: false,
+						        borderColor: 'rgb(75, 192, 192)',
+						        borderJoinStyle: 'miter',
+						        tension: 0.1
+						          }]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'In hosting/colocation' },
+ 												legend: {display: false, },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
 						
 					} else {
 						echo cache_dati(CH_STATGEN .     '-' . $idcategory, $nocache);
