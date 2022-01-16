@@ -13,6 +13,7 @@
  * 20180217 prima versione
  * 20181007 campo visited
  * 20211204 cambio licenza per pubblicazione sorgenti
+ * 20220116 rimosso 3xx inutile
  *
  * This file is part of SESAE.
  *
@@ -66,13 +67,8 @@ if (isset($_GET['type'])) {
 			$displayresetzero = true;
 		break;
 		case '3xx':  // http 3xx
-			$filtro = "(targetdata.http_code>=300 AND targetdata.http_code<=399)";
-			$intestazione = "HTTP 3xx";
-			$confiltro = true;
-		break;
-		case '3xxf':  // http 3xx con filtro
 			$filtro = "(targetdata.http_code>=200 AND targetdata.http_code<=399)";
-			$intestazione = "HTTP 3xx con filtro";
+			$intestazione = "HTTP 3xx";
 			$confiltro = true;
 		break;
 		case '4xx':  // http 4xx
