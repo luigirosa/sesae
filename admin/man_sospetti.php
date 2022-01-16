@@ -54,7 +54,7 @@ $q = $db->query("SELECT target.idtarget,target.description,target.url,target.vis
 
 if ($q->num_rows > 0) {
 	echo "\n<table border='0' align='center'>";
-	echo $b2->intestazioneTabella(array('Target', 'URL/Location', 'Title', 'Ex'));
+	echo $b2->intestazioneTabella(array('Last', 'Sito', 'URL', 'Titolo HTML'));
 	while ($r = $q->fetch_array()) {
 		$bg = $b2->bgcolor();
 		echo "\n<tr $bg>";
