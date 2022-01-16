@@ -75,7 +75,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo  "\n<div class='linavigatore'><a href='mostradati.php?c=$r[idcategory]' class='linavigatore'>$r[category]</a></div>";
 					}
 				?>
-				<p><b>Grafici</b></p>
+				<p><b>Grafici giornalieri</b></p>
 				<div class='linavigatore'><a href='mostradati.php?g=0' class='linavigatore'>Tutto</a></div>
 				<?php
 					$q = $db->query("SELECT idcategory,category FROM category WHERE enabled='1' ORDER BY weight");
@@ -240,6 +240,86 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						          maintainAspectRatio: false,
 									    plugins: {
 									      title: { display: true, text: 'IPv4 univoci' },
+ 												legend: {display: false, },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						// numero AS IPv4 univoci
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:200px'><canvas id='chASIPv4univoci'></canvas></div>
+						<script>
+							const ctx_asipv4uni = document.getElementById('chASIPv4univoci');
+							const myChart_asipv4uni = new Chart(ctx_asipv4uni, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT `data` FROM `storico` WHERE idcampostorico=10 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						echo "\n datasets: [{
+            label: 'AS IPv4 univoci',";
+						echo "\n data: [";
+						$a = array();
+						$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=10 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+						echo (implode(',', $a));
+						echo "],";
+						echo "\nfill: false,
+						        borderColor: 'rgb(75, 192, 192)',
+						        borderJoinStyle: 'miter',
+						        tension: 0.1
+						          }]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'AS IPv4 univoci' },
+ 												legend: {display: false, },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						// numero AS IPv6 univoci
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:200px'><canvas id='chASIPv6univoci'></canvas></div>
+						<script>
+							const ctx_asipv6uni = document.getElementById('chASIPv6univoci');
+							const myChart_asipv6uni = new Chart(ctx_asipv6uni, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT `data` FROM `storico` WHERE idcampostorico=17 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						echo "\n datasets: [{
+            label: 'AS IPv6 univoci',";
+						echo "\n data: [";
+						$a = array();
+						$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=17 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+						echo (implode(',', $a));
+						echo "],";
+						echo "\nfill: false,
+						        borderColor: 'rgb(75, 192, 192)',
+						        borderJoinStyle: 'miter',
+						        tension: 0.1
+						          }]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'AS IPv6 univoci' },
  												legend: {display: false, },
 									    },
 									  scales: {
