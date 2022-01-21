@@ -112,7 +112,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -152,7 +152,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -192,7 +192,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -232,7 +232,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -272,7 +272,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -312,7 +312,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -352,7 +352,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						echo (implode(',', $a));
 						echo "],";
 						echo "\nfill: false,
-						        borderColor: 'rgb(75, 192, 192)',
+						        borderColor: 'rgba(75, 192, 192, 0.8)',
 						        borderJoinStyle: 'miter',
 						        tension: 0.1
 						          }]   },
@@ -368,6 +368,124 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						       }  });
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
+						// AS IPv4 piu` comuni
+						// devo iniziare a capire quali sono gli AS piu` comuni, prendo i primi 10 e vedo anche la descrizione per popolare la legenda
+						$aas = array();   // array dei 10 nomi di AS piu` famosi
+						$legenda = '';
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s,ip.asname,ip.org 
+						                 FROM storico
+														 JOIN ip ON storico.valorestr=ip.as
+														 WHERE storico.idcampostorico=7 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+							$legenda .= "\n$r[valorestr] $r[asname] $r[org]<br/>";
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chasipv4'></canvas></div>
+						<script>
+							const ctx_asipv4 = document.getElementById('chasipv4');
+							const myChart_asipv4 = new Chart(ctx_asipv4, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=7 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							echo "\n{label: '$as', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=7 AND valorestr='$as' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'AS IPv6 piu` comuni' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						echo "<p>$legenda</p>";
+						// AS IPv6 piu` comuni
+						// devo iniziare a capire quali sono gli AS piu` comuni, prendo i primi 10 e vedo anche la descrizione per popolare la legenda
+						$aas = array();   // array dei 10 nomi di AS piu` famosi
+						$legenda = '';
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s,ip.asname,ip.org 
+						                 FROM storico
+														 JOIN ip ON storico.valorestr=ip.as
+														 WHERE storico.idcampostorico=8 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+							$legenda .= "\n$r[valorestr] $r[asname] $r[org]<br/>";
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chasipv6'></canvas></div>
+						<script>
+							const ctx_asipv6 = document.getElementById('chasipv6');
+							const myChart_asipv6 = new Chart(ctx_asipv6, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=8 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							echo "\n{label: '$as', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=8 AND valorestr='$as' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'AS IPv6 piu` comuni' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						echo "<p>$legenda</p>";
 						
 					} else {
 						echo cache_dati(CH_STATGEN .     '-' . $idcategory, $nocache);
