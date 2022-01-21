@@ -418,7 +418,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						        options: {
 						          maintainAspectRatio: false,
 									    plugins: {
-									      title: { display: true, text: 'AS IPv6 piu` comuni' },
+									      title: { display: true, text: 'AS IPv4' },
 									    },
 									  scales: {
 									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
@@ -477,7 +477,7 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						        options: {
 						          maintainAspectRatio: false,
 									    plugins: {
-									      title: { display: true, text: 'AS IPv6 piu` comuni' },
+									      title: { display: true, text: 'AS IPv6' },
 									    },
 									  scales: {
 									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
@@ -486,7 +486,63 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
 						echo "<p>$legenda</p>";
-						
+						// web server
+						// devo iniziare a capire quali sono i dati piu`comuni
+						$aas = array();   // array dei 10 nomi  piu` famosi
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s
+						                 FROM storico
+														 WHERE storico.idcampostorico=5 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chwebserver'></canvas></div>
+						<script>
+							const ctx_webserver = document.getElementById('chwebserver');
+							const myChart_webserver = new Chart(ctx_webserver, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=5 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							echo "\n{label: '$as', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=5 AND valorestr='$as' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Web server' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+
+
 					} else {
 						echo cache_dati(CH_STATGEN .     '-' . $idcategory, $nocache);
 						echo cache_dati(CH_COUNTRYIPV4 . '-' . $idcategory, $nocache);
