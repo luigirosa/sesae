@@ -596,6 +596,119 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						       }  });
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
+						// country IPv4
+						// devo iniziare a capire quali sono i dati piu`comuni
+						$aas = array();   // array dei 10 nomi  piu` famosi
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s
+						                 FROM storico
+														 WHERE storico.idcampostorico=11 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chcountryipv4'></canvas></div>
+						<script>
+							const ctx_countryipv4 = document.getElementById('chcountryipv4');
+							const myChart_countryipv4 = new Chart(ctx_countryipv4, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=11 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							$rr = $db->query("SELECT stato FROM iso3166a2 WHERE iso='$as'")->fetch_array();
+							echo "\n{label: '$rr[stato]', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=11 AND valorestr='$as' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Country IPv4' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+						// country IPv6
+						// devo iniziare a capire quali sono i dati piu`comuni
+						$aas = array();   // array dei 10 nomi  piu` famosi
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s
+						                 FROM storico
+														 WHERE storico.idcampostorico=21 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chcountryipv6'></canvas></div>
+						<script>
+							const ctx_countryipv6 = document.getElementById('chcountryipv6');
+							const myChart_countryipv6 = new Chart(ctx_countryipv6, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=21 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							$rr = $db->query("SELECT stato FROM iso3166a2 WHERE iso='$as'")->fetch_array();
+							echo "\n{label: '$rr[stato]', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=21 AND valorestr='$as' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Country IPv6' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+
 
 
 
