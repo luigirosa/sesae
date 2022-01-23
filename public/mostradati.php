@@ -818,6 +818,62 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						       }  });
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
+						// emittente del certifciato
+						// devo iniziare a capire quali sono i dati piu` comuni
+						$aas = array();   // array dei 10 nomi  piu` famosi
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s
+						                 FROM storico
+														 WHERE storico.idcampostorico=12 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chsslissuer'></canvas></div>
+						<script>
+							const ctx_sslissuer = document.getElementById('chsslissuer');
+							const myChart_sslissuer = new Chart(ctx_sslissuer, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=12 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							$eas = addslashes($as);
+							echo "\n{label: '$eas', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=12 AND valorestr='$eas' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Emittente del certificato SSL' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
 
 
 
