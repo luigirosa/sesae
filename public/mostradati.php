@@ -763,6 +763,62 @@ if (isset($_GET['nocache'])) $nocache = 'nocache';
 						       }  });
 					   	    </script>";
 						echo "\n</div>"; // class='contenitoregrafico'>
+						// generator
+						// devo iniziare a capire quali sono i dati piu` comuni
+						$aas = array();   // array dei 10 nomi  piu` famosi
+						$q = $db->query("SELECT storico.valorestr,SUM(storico.valoreint) AS s
+						                 FROM storico
+														 WHERE storico.idcampostorico=19 $wha
+														 GROUP BY storico.valorestr 
+														 ORDER BY s DESC 
+														 LIMIT 10");
+						while ($r = $q->fetch_array()) {
+							$aas[] = $r['valorestr'];
+						}
+						echo "\n<div class='contenitoregrafico'>";
+						echo "
+						<div class='grafico' style='position: relative; height:400px'><canvas id='chgenerator'></canvas></div>
+						<script>
+							const ctx_generator = document.getElementById('chgenerator');
+							const myChart_generator = new Chart(ctx_generator, {
+								type: 'line',
+								data: {";
+						echo "\nlabels: [";
+						$a = array();
+						$q = $db->query("SELECT DISTINCT `data` FROM `storico` WHERE idcampostorico=19 $wha ORDER BY `data`");
+						while ($r = $q->fetch_array()) $a[] = "'". date('j/n/Y', strtotime($r['data'])) . "'";
+						echo (implode(',', $a));
+						echo "],";
+						// dataset
+						echo "\n datasets: [";
+						foreach ($aas as $as) {
+							$randcolor = rand(0, 255) . ',' . rand(0, 255) . ',' . rand(0, 255) . ',';
+							echo "\n{label: '$as', data: [";
+							$a = array();
+							$q = $db->query("SELECT `valoreint` FROM `storico` WHERE idcampostorico=19 AND valorestr='$as' $wha ORDER BY `data`");
+								while ($r = $q->fetch_array()) $a[] = $r['valoreint'];
+								echo (implode(',', $a));
+								echo "],";
+								echo "\nfill: false,
+												borderColor: 'rgba($randcolor 0.8)',
+												backgroundColor: 'rgba($randcolor 0.8)',
+												borderJoinStyle: 'miter',
+												tension: 0.1 },";
+						}
+						// fine dei dataset
+						echo "\n	]   },
+						        options: {
+						          maintainAspectRatio: false,
+									    plugins: {
+									      title: { display: true, text: 'Generator' },
+									    },
+									  scales: {
+									    xAxes: [ { ticks: {autoSkip: false, maxRotation: 90, minRotation: 00 } } ]
+						       	 }
+						       }  });
+					   	    </script>";
+						echo "\n</div>"; // class='contenitoregrafico'>
+
 
 
 
