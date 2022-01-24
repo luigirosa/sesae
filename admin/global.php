@@ -23,6 +23,7 @@
  * 20211230 romosso RRD e storicizzazione su SQL
  * 20220102 statistiche PoweredBy
  * 20220124 rimosso campo target.checked
+ * 20220124 aggiunto randomizenext()
  *
  * This file is part of SESAE.
  *
@@ -44,7 +45,7 @@
 //error_reporting ( E_ALL );
 //ini_set ( "display_errors", 'on' );
 
-define('SESAE_VERSION', "2021123102");
+define('SESAE_VERSION', "2022012401");
 
 if(!defined('SESAE')) {
 	header ('Location: https://www.google.com');
@@ -1407,6 +1408,32 @@ function getipid($ip) {
 		}
 	}
 	return($retval);
+}
+
+
+
+/**
+ * randomizenext()
+ * 
+ * Randomizza tutti i nextprobe
+ *
+ * 20220124 prima versione
+ * 
+ */
+function randomizenext() {
+	global $db,$b2;
+	$aprobe = array();
+	$cheprobe = -1;
+	//leggo i probe validi
+	$q = $db->query("SELECT idprobe FROM probe WHERE isenabled='1' AND isadmin='0'");
+	while ($r = $q->fetch_array()) {
+		$cheprobe++;
+		$aprobe[$cheprobe] = $r['idprobe'];
+	}
+	$q = $db->query("SELECT idtarget FROM target");
+	while ($r = $q->fetch_array()) {
+		$db->query("UPDATE target SET nextprobe='" . $aprobe[rand(0,$cheprobe)] . "' WHERE idtarget='$r[idtarget]'");
+	} 
 }
 
 

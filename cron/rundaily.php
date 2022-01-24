@@ -16,6 +16,7 @@
  * 20211224 buttato via quasi tutto e ripartito daccapo
  * 20211226 merge admin+public e ristrutturazione albero directory
  * 20211230 rimosso RRD e storicizzazione su SQL
+ * 20220124 randomizenext()
  *
  * This file is part of SESAE.
  *
@@ -41,6 +42,9 @@ require('../admin/global.php');
 
 // cancello la cache degli IP vecchi
 getipgeo('clearcache');
+
+// randomizza i probe
+randomizenext();
 
 //
 // Storicizzazione
