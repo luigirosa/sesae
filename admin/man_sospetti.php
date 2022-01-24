@@ -12,6 +12,7 @@
  * 
  * 20190113 prima versione
  * 20211204 cambio licenza per pubblicazione sorgenti
+ * 20220124 rimosso campo target.checked
  *
  * This file is part of SESAE.
  *
@@ -33,23 +34,13 @@
 define('SESAE', true);
 require('global.php');
 
-// ajax
-if (isset($_POST['dispatch']) and 'ex' == $_POST['dispatch']) {
-	//error_log(print_r($_POST, true));
-	list ($nonserve,$idtarget) = explode('-', $_POST['nome']);
-	$idtarget = $b2->normalizza($idtarget);
-	$valore = $_POST['stato'] == 'true' ? 1 : 0;
-	$db->query("UPDATE target SET checked='$valore' WHERE idtarget='$idtarget'");
-	die();
-}
-
 intestazione('Sospetti');
 
 $q = $db->query("SELECT target.idtarget,target.description,target.url,target.visited,
                         targetdata.http_location,targetdata.html_title
                  FROM target
                  JOIN targetdata ON target.idtarget=targetdata.idtarget
-                 WHERE target.visited>0 AND target.checked='0' AND (INSTR(targetdata.html_title,'sospes')>0 OR INSTR(targetdata.html_title,'dominio')>0 OR INSTR(targetdata.html_title,'domain')>0 OR INSTR(targetdata.html_title,'redirect')>0 OR INSTR(targetdata.html_title,'aruba')>0 OR INSTR(targetdata.html_title,'error')>0 OR INSTR(targetdata.html_title,'vendit')>0 OR HEX(targetdata.html_title) REGEXP '^(..)*(E[4-9])')
+                 WHERE target.visited>0 AND (INSTR(targetdata.html_title,'sospes')>0 OR INSTR(targetdata.html_title,'dominio')>0 OR INSTR(targetdata.html_title,'domain')>0 OR INSTR(targetdata.html_title,'redirect')>0 OR INSTR(targetdata.html_title,'aruba')>0 OR INSTR(targetdata.html_title,'error')>0 OR INSTR(targetdata.html_title,'vendit')>0 OR HEX(targetdata.html_title) REGEXP '^(..)*(E[4-9])')
                  ORDER BY target.visited");
 
 if ($q->num_rows > 0) {
@@ -62,28 +53,12 @@ if ($q->num_rows > 0) {
 		echo "<td $bg align='left'><a target='_blank' href='ana_targetedit.php?idtarget=$r[idtarget]'>$r[description]</a></td>";
 		echo "<td $bg align='left'><a target='_blank' href='ana_targetedit.php?idtarget=$r[idtarget]'>$r[url]<br/>$r[http_location]</a></td>";
 		echo "<td $bg align='left'><a target='_blank' href='ana_targetedit.php?idtarget=$r[idtarget]'>$r[html_title]</a></td>";
-		echo "<td $bg align='center'>" . $b2->inputCheck("ex-$r[idtarget]", false, "ex-$r[idtarget]", "class='ex'") .  "</td>";
 		echo "</tr>";
 	}
 	echo "\n</table>";
 } else {
 	echo "<b>Nessun target corrisponde alla ricerca indicata.</b>";
 }
-
-?> 
-<script>
-	$(document).ready(function() {
-  	// cambio checkbox
-  	$(".ex").change(function(){
-  		var nome = $(this).attr("name");
-  		var stato = $(this).is(':checked');
-			$.post("man_sospetti.php", 
-				{dispatch: "ex", nome: nome, stato: stato})
-  	});
-	});	
-</script>
-
-<?php
 
 piede();
 

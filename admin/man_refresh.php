@@ -12,6 +12,7 @@
  * 
  * 20190106 prima versione
  * 20211204 cambio licenza per pubblicazione sorgenti
+ * 20220124 rimosso campo target.checked
  *
  * This file is part of SESAE.
  *
@@ -33,22 +34,12 @@
 define('SESAE', true);
 require('global.php');
 
-// ajax
-if (isset($_POST['dispatch']) and 'ex' == $_POST['dispatch']) {
-	//error_log(print_r($_POST, true));
-	list ($nonserve,$idtarget) = explode('-', $_POST['nome']);
-	$idtarget = $b2->normalizza($idtarget);
-	$valore = $_POST['stato'] == 'true' ? 1 : 0;
-	$db->query("UPDATE target SET checked='$valore' WHERE idtarget='$idtarget'");
-	die();
-}
-
 intestazione('http-equiv=refresh');
 
 $q = $db->query("SELECT meta.idtarget,meta.raw 
                  FROM meta 
                  JOIN target ON meta.idtarget=target.idtarget
-                 WHERE target.checked='0' AND meta.raw LIKE '%refresh%' AND meta.raw LIKE '%url%' AND (meta.raw LIKE '%http:%' OR meta.raw LIKE '%https:%')
+                 WHERE meta.raw LIKE '%refresh%' AND meta.raw LIKE '%url%' AND (meta.raw LIKE '%http:%' OR meta.raw LIKE '%https:%')
                  ORDER BY target.visited DESC");
 
 if ($q->num_rows > 0) {
@@ -68,7 +59,6 @@ if ($q->num_rows > 0) {
 			echo "<td $bg align='left'><a target='_blank' href='ana_targetedit.php?idtarget=$rr[idtarget]'>" . str_replace($match, "<b>$match</b>", $rr['url']) . "<br/>$rr[http_location]</a></td>";
 			echo "<td $bg align='right'><a target='_blank' href='ana_targetedit.php?idtarget=$rr[idtarget]'>$rr[http_code]</a></td>";
 			echo "<td $bg align='left'><a target='_blank' href='ana_targetedit.php?idtarget=$rr[idtarget]'>" . str_replace($match, "<b>$match</b>", htmlentities($r['raw'])) . "</a></td>";
-			echo "<td $bg align='center'>" . $b2->inputCheck("ex-$r[idtarget]", false, "ex-$r[idtarget]", "class='ex'") .  "</td>";
 			echo "\n</tr>";
 		}
 	}
@@ -76,21 +66,6 @@ if ($q->num_rows > 0) {
 } else {
 	echo "<b>Nessun target corrisponde alla ricerca indicata.</b>";
 }
-
-?> 
-<script>
-	$(document).ready(function() {
-  	// cambio checkbox
-  	$(".ex").change(function(){
-  		var nome = $(this).attr("name");
-  		var stato = $(this).is(':checked');
-			$.post("man_refresh.php", 
-				{dispatch: "ex", nome: nome, stato: stato})
-  	});
-	});	
-</script>
-
-<?php
 
 piede();
 

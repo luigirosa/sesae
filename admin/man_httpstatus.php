@@ -14,6 +14,7 @@
  * 20181007 campo visited
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20220116 rimosso 3xx inutile
+ * 20220124 rimosso campo target.checked
  *
  * This file is part of SESAE.
  *
@@ -35,36 +36,13 @@
 define('SESAE', true);
 require('global.php');
 
-if (isset($_POST['resetzero'])) {
-	$db->query("UPDATE target
-	            JOIN targetdata ON target.idtarget=targetdata.idtarget
-	            SET target.visited='0'
-	            WHERE targetdata.http_code='0'");
-	header("Location: man_httpstatus.php?type=m200");
-	die();
-}
-
-
-// ajax
-if (isset($_POST['dispatch']) and 'ex' == $_POST['dispatch']) {
-	//error_log(print_r($_POST, true));
-	list ($nonserve,$idtarget) = explode('-', $_POST['nome']);
-	$idtarget = $b2->normalizza($idtarget);
-	$valore = $_POST['stato'] == 'true' ? 1 : 0;
-	$db->query("UPDATE target SET checked='$valore' WHERE idtarget='$idtarget'");
-	die();
-}
-
-
 if (isset($_GET['type'])) {
 	$filtro = '';
-	$displayresetzero = false;
 	$confiltro = false;
 	switch ($_GET['type']) {
 		case 'm200':  // http < 200
 			$filtro = "targetdata.http_code<200";
 			$intestazione = "HTTP < 200";
-			$displayresetzero = true;
 		break;
 		case '3xx':  // http 3xx
 			$filtro = "(targetdata.http_code>=200 AND targetdata.http_code<=399)";
@@ -101,15 +79,10 @@ $q = $db->query("SELECT target.idtarget,target.description,target.url,target.ena
                         targetdata.http_code,targetdata.http_location,targetdata.html_title
                  FROM target
                  JOIN targetdata ON target.idtarget=targetdata.idtarget
-                 WHERE target.checked='0' AND $filtro
+                 WHERE $filtro
                  ORDER BY target.visited DESC");
 
 if ($q->num_rows > 0) {
-	if ($displayresetzero) {
-		echo "\n<form method='post' target='man_httpstatus.php'>";
-		echo "<div><label><input type='checkbox' name='resetzero'/> Resetta a zero le visite</label> <input type='submit' value='Reset'/></div>";
-		echo "</form>";	
-	}
 	echo "\n<table border='0' align='center'>";
 	echo $b2->intestazioneTabella(array('Visited', 'Target', 'Title', 'URL/Location', ' '));
 	while ($r = $q->fetch_array()) {
@@ -161,7 +134,6 @@ if ($q->num_rows > 0) {
 			echo "<td $bg align='left'><a href='ana_targetedit.php?idtarget=$r[idtarget]' target='_blank'>$r[description]$abilitato<br />$r[html_title]</a>&nbsp;</td>";
 			echo "<td $bg align='center'>$display</td>";
 			echo "<td $bg align='left'><a href='ana_targetedit.php?idtarget=$r[idtarget]' target='_blank'>" . str_replace($match, "<b>$match</b>", $r['url']) . "<br/>" . str_replace($match, "<b>$match</b>", $r['http_location']) . "</a>&nbsp;</td>";
-			echo "<td $bg align='center'>" . $b2->inputCheck("ex-$r[idtarget]", false, "ex-$r[idtarget]", "class='ex'") .  "</td>";
 			echo "</tr>";
 			$quante++;
 		}
@@ -174,21 +146,7 @@ if ($q->num_rows > 0) {
 
 echo "\n<p>&nbsp;</p>";
 echo "\n<p>&nbsp;</p>";
-
-?>
-<script>
-	$(document).ready(function() {
-  	// cambio checkbox
-  	$(".ex").change(function(){
-  		var nome = $(this).attr("name");
-  		var stato = $(this).is(':checked');
-			$.post("man_httpstatus.php", 
-				{dispatch: "ex", nome: nome, stato: stato})
-  	});
-	});	
-</script>
-
-<?php
+echo "\n<p>&nbsp;</p>";
 
 piede();
 

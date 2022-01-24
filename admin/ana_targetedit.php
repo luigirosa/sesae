@@ -19,6 +19,7 @@
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20211227 aggiunta campo id univoco esterno
  * 20211231 nuova gestione IP
+ * 20220124 rimosso campo target.checked
  *
  * This file is part of SESAE.
  *
@@ -112,7 +113,6 @@ if (isset($_POST['idtarget'])) {
 		$desc = str_replace('"', ' ', $desc );
 		$desc = preg_replace('#\s+#', ' ', $desc);
 		$a = array();
-		$a[] = $b2->campoSQL("checked", 0);
 		$a[] = $b2->campoSQL("enabled", isset($_POST['enabled']) ? 1 : 0);
 		$a[] = $b2->campoSQL("idcategory", $_POST['idcategory']);
 		$a[] = $b2->campoSQL("description", $desc);
@@ -310,12 +310,12 @@ if ($idtarget > 0) {
 	if ($rt['idipv4'] > 0) {
 		$ripv4 = $db->query("SELECT * FROM ip WHERE idip='$rt[idipv4]'")->fetch_array();
 	} else {
-		$ripv4 = array();
+		$ripv4 = array('ishosting'=>0, 'ip'=>'', 'ipv4host'=>'','reverse'=>'','country'=>'','org'=>'','asname'=>'','as'=>'','asowner'=>'','countrycode'=>'','continent'=>'','isp'=>'');
 	}
 	if ($rt['idipv6'] > 0) {
 		$ripv6 = $db->query("SELECT * FROM ip WHERE idip='$rt[idipv6]'")->fetch_array();
 	} else {
-		$ripv6 = array();
+		$ripv6 = array('ishosting'=>0, 'ip'=>'', 'ipv6host'=>'','reverse'=>'','country'=>'','org'=>'','asname'=>'','as'=>'','asowner'=>'','countrycode'=>'','continent'=>'','isp'=>'');
 	}
 	$ishosting4 = $ripv4['ishosting'] == 1 ? 'S&igrave;' : 'No';
 	$ishosting6 = $ripv6['ishosting'] == 1 ? 'S&igrave;' : 'No';

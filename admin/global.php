@@ -22,6 +22,7 @@
  * 20211226 merge admin+public e ristrutturazione albero directory
  * 20211230 romosso RRD e storicizzazione su SQL
  * 20220102 statistiche PoweredBy
+ * 20220124 rimosso campo target.checked
  *
  * This file is part of SESAE.
  *
@@ -394,14 +395,12 @@ function getipgeo($ip) {
  */
 function aggiornacampo($idtarget, $campo, $valore) {
 	global $db, $b2;
-	$checked = false;
 	switch ($campo) {
 		case 'hostname':
 			$valore = trim(strtolower($valore));
 			$r = $db->query("SELECT hostname FROM targetdata WHERE idtarget='$idtarget'")->fetch_array();
 			if (trim($r[0]) != $valore) {
-				$db->query("UPDATE targetdata SET hostname='" . $b2->normalizza($valore) . "',checked='0' WHERE idtarget='$idtarget'");
-				$checked = true;
+				$db->query("UPDATE targetdata SET hostname='" . $b2->normalizza($valore) . "', WHERE idtarget='$idtarget'");
 			}
 		break;
 		case 'ipv6':
@@ -556,8 +555,6 @@ function aggiornacampo($idtarget, $campo, $valore) {
 		default:
 			error_log("aggiornacampo() campo $campo valore $valore - Campo non riconosciuto.");
 	}
-	// se e' cambiato qualche campo, flaggo 
-	$db->query("UPDATE target SET checked='0' WHERE idtarget='$idtarget'");
 }
 
 /**
@@ -570,7 +567,6 @@ function aggiornacampo($idtarget, $campo, $valore) {
  */
 function aggiornacampoarray($idtarget, $campo, $avalore) {
 	global $db, $b2;
-	$checked = false;
 	switch ($campo) {
 		case 'mx':
 			//pulizia
@@ -631,8 +627,6 @@ function aggiornacampoarray($idtarget, $campo, $avalore) {
 		default:
 			error_log("aggiornacampoarray() $campo non riconosciuto.");
 	}
-	// se e' cambiato qualche campo, flaggo 
-	$db->query("UPDATE target SET checked='0' WHERE idtarget='$idtarget'");
 }
 
 
@@ -1171,7 +1165,6 @@ function cleantarget($idtarget) {
 		$db->query("DELETE FROM targetdata WHERE idtarget='$idtarget'");
 		$db->query("DELETE FROM targetraw WHERE idtarget='$idtarget'");
 		$a = array();
-		$a[] = $b2->campoSQL("checked", 0);
 		$a[] = $b2->campoSQL("counter", 0);
 		$a[] = $b2->campoSQL("visited", 0);
 		$a[] = $b2->campoSQL("enabled", 1 );
