@@ -40,7 +40,8 @@ if (isset($_POST['p'])) {
 			$a = array();
 			$rr = $db->query("SELECT http_location FROM targetdata WHERE idtarget='$idtarget'")->fetch_array();
 			$a[] = $b2->campoSQL("url", $rr['http_location']);
-			$a[] = $b2->campoSQL("visited", rand(1,900000));
+			$a[] = $b2->campoSQL("visited", randomvisit());
+			$a[] = $b2->campoSQL("nextprobe", randomprobe());
 			$db->query("UPDATE target SET " . implode(',', $a) . " WHERE idtarget='$idtarget'");
 		}
 	}
