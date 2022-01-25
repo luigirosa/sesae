@@ -15,6 +15,7 @@
  * 20200614 basta log
  * 20211204 cambio licenza per pubblicazione sorgenti
  * 20211211 aggiunta visualizzazione target che saranno analizzati
+ * 20220125 nuovo metodo di accodamento
  *
  * This file is part of SESAE.
  *
@@ -56,7 +57,7 @@ while ($r = $q->fetch_array()) {
 	echo "\n<tr $bg>";
 	echo "<td $bg align='left'><a href='ana_targetedit.php?idtarget=$r[idtarget]' target='_blank'>$r[description]</a></td>";
 	echo "<td $bg align='right'>$r[http_code]</td>";
-	echo "<td $bg align='left'>$r[html_title]</td>";
+	echo "<td $bg align='left'>" . substr($r['html_title'], 0, 50) . "</td>";
 	echo "<td $bg align='left'>" . tempopassato($r['visited'] - $r['visited_before'], true) . "</td>";
 	echo "<td $bg align='left'>$r[probe]</td>";
 	echo "</tr>";
@@ -69,9 +70,11 @@ echo "<b>Prossime scansioni:</b>";
 echo "\n<table border='0'>"; // tabella scansioni future
 $b2->bgcolor(true);
 $q = $db->query("SELECT target.idtarget,target.description,target.url,target.visited,target.visited_before,
-                        targetdata.http_code,targetdata.html_title
+                        targetdata.http_code,targetdata.html_title,
+												probe.probe
                  FROM target 
                  JOIN targetdata ON target.idtarget=targetdata.idtarget
+                 LEFT JOIN probe ON target.nextprobe=probe.idprobe
                  ORDER BY target.visited  
                  LIMIT 40");
 while ($r = $q->fetch_array()) {
@@ -79,8 +82,9 @@ while ($r = $q->fetch_array()) {
 	echo "\n<tr $bg>";
 	echo "<td $bg align='left'><a href='ana_targetedit.php?idtarget=$r[idtarget]' target='_blank'>$r[description]</a></td>";
 	echo "<td $bg align='right'>$r[http_code]</td>";
-	echo "<td $bg align='left'>$r[html_title]</td>";
+	echo "<td $bg align='left'>" . substr($r['html_title'], 0, 50) . "</td>";
 	echo "<td $bg align='left'>" . tempopassato(time() - $r['visited'], true) . "</td>";
+	echo "<td $bg align='left'>$r[probe]</td>";
 	echo "</tr>";
 }
 echo "\n</table>"; // tabella scansioni future
