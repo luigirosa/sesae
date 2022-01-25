@@ -89,18 +89,15 @@ while ($r = $q->fetch_array()) {
 }
 echo "\n</table>"; // tabella scansioni future
 
-echo "\n</tr></table>"; // tabellona
+echo "\n<tr>";  //seconda riga tabellona
 
-
-
-echo "<b>Sonde:</b>";
+echo "<td valign='top'><b>Sonde:</b>";
 $b2->bgcolor(true);
 $q = $db->query("SELECT probe.probe,probe.lasttime,probe.isenabled,probe.counter,probe.version,
                         target.description
                  FROM probe
                  JOIN target ON probe.lasttarget=target.idtarget");
 echo "\n<table border='0'>";
-echo $b2->intestazioneTabella(array('Probe', 'Last tgt', 'Date', "Count",'Ver'));
 while ($r = $q->fetch_array()) {
 	$bg = $b2->bgcolor();
 	echo "\n<tr $bg>";
@@ -111,8 +108,36 @@ while ($r = $q->fetch_array()) {
 	echo "<td $bg align='left'>$r[version]</td>";
 	echo "</tr>";
 }
-echo "\n</table>";
+echo "\n</table></td>";  //sonde
 
+echo "<td valign='top'><b>Prossime scansioni per sonde:</b>";
+$b2->bgcolor(true);
+$qp = $db->query("SELECT idprobe FROM probe WHERE isenabled='1' AND isadmin='0'");
+echo "\n<table border='0'>";
+while ($rp = $qp->fetch_array()) {
+	$q = $db->query("SELECT target.idtarget,target.description,target.url,target.visited,target.visited_before,
+	                 targetdata.http_code,targetdata.html_title,
+									 probe.probe
+									 FROM target 
+									 JOIN targetdata ON target.idtarget=targetdata.idtarget
+									 LEFT JOIN probe ON target.nextprobe=probe.idprobe
+									 WHERE target.nextprobe='$rp[idprobe]'
+									 ORDER BY target.visited
+									 LIMIT 3");
+	while ($r = $q->fetch_array()) {
+		$bg = $b2->bgcolor();
+		echo "\n<tr $bg>";
+		echo "<td $bg align='left'><a href='ana_targetedit.php?idtarget=$r[idtarget]' target='_blank'>$r[description]</a></td>";
+		echo "<td $bg align='right'>$r[http_code]</td>";
+		echo "<td $bg align='left'>" . substr($r['html_title'], 0, 50) . "</td>";
+		echo "<td $bg align='left'>" . tempopassato(time() - $r['visited'], true) . "</td>";
+		echo "<td $bg align='left'>$r[probe]</td>";
+			echo "</tr>";
+	}
+}
+echo "\n</table></td>";  //prossime per sonde
+
+echo "\n</tr></table>"; // tabellona
 
 echo "\n<p>&nbsp;</p>";
 

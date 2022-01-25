@@ -179,6 +179,7 @@ if (0 == $idtarget) {
 	$r['nextprobe'] = randomprobe();
 	$r['mailhost'] = '';
 	$r['external_id'] = '';
+	$r['visited_before'] = 0;
 } else {
 	$r = $db->query("SELECT * FROM target WHERE idtarget='$idtarget'")->fetch_array();
 	$intestazione = "Modifica $r[description]";
