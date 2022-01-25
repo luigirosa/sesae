@@ -1469,7 +1469,7 @@ function randomizenext() {
 function randomvisit() {
 	global $db,$b2;
 	$r = $db->query("SELECT visited FROM `target` ORDER BY visited limit 1")->fetch_array();
-	return($r['visited'] - rand(0,1000));
+	return($r['visited'] - rand(1000,10000));
 }
 
 
