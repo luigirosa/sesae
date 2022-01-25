@@ -118,12 +118,9 @@ if (isset($_POST['idtarget'])) {
 		$a[] = $b2->campoSQL("description", $desc);
 		$a[] = $b2->campoSQL("mailhost", $_POST['mailhost']);
 		$a[] = $b2->campoSQL("external_id", $_POST['external_id']);
+		$a[] = $b2->campoSQL("nextprobe", $_POST['nextprobe']);
 		if (isset($_POST['resetvisita'])) {
-			$a[] = $b2->campoSQL("visited", rand(1,20000));
-		}
-		if (isset($_POST['resetcounters'])) {
-			$a[] = $b2->campoSQL("lastprobe", 0);
-			$a[] = $b2->campoSQL("counter", 0);
+			$a[] = $b2->campoSQL("visited", randomvisit());
 		}
 		if ('' != trim($_POST['description']) and '' != trim($_POST['url'])) {
 			if (0 == $idtarget) {
@@ -177,8 +174,9 @@ if (0 == $idtarget) {
 	$r['enabled'] = '1';
 	$r['description'] = '';
 	$r['url'] = '';
-	$r['visited'] = rand(1,20000);
+	$r['visited'] = randomvisit();
 	$r['lastprobe'] = 0;
+	$r['nextprobe'] = randomprobe();
 	$r['mailhost'] = '';
 	$r['external_id'] = '';
 } else {
@@ -207,7 +205,6 @@ while ($rx = $qx->fetch_array()) {
 	$ck = $r['idtarget'] == 0 ? true : isprobe($r['idtarget'], $rx['idprobe']);
 	$probe .= "<label>$rx[probe]:" . $b2->inputCheck("probe-$rx[idprobe]", $ck) . "</label>&nbsp;&nbsp;";
 }
-echo $b2->rigaEdit('Probe', $probe);
 echo $b2->rigaEdit('Test', "<a href='$r[url]' target='_blank'>$r[url]</a>");
 if ($r['idcategory'] == 4) { // comune
 	echo $b2->rigaEdit('Google', "<a href='https://www.google.com/search?q=" . urlencode("comune di " . $r['description']) . "' target='_blank'>Cerca su Goooooogle</a>");
@@ -221,6 +218,8 @@ if ($r['idcategory'] == 4) { // comune
 } else {
 	echo $b2->rigaEdit('Google', "<a href='https://www.google.com/search?q=" . urlencode($r['description']) . "' target='_blank'>Cerca su Goooooogle</a>");
 }
+echo $b2->rigaEdit('Probe', $probe);
+echo $b2->rigaEdit('Next probe', $b2->inputSelect('nextprobe', $b2->creaArraySelect("SELECT idprobe,probe FROM probe WHERE isenabled='1' AND isadmin='0' ORDER BY probe"), $r['nextprobe']));
 // ultima visita
 if ($r['lastprobe'] > 0) {
 	$rr = $db->query("SELECT probe FROM probe WHERE idprobe='$r[lastprobe]'")->fetch_array();
@@ -232,11 +231,9 @@ echo $b2->rigaEdit('Ultima visita', date("j/n/Y G:i", $r['visited']) . $zz . "  
 if ($r['idtarget'] > 0 ) echo $b2->rigaEdit('Visite:', number_format($r['counter'], 0, ',', '.'));
 echo $b2->rigaEdit('Rianalizza il target', $b2->inputCheck('scantarget', false));
 if ($idtarget > 0) echo $b2->rigaEdit('Reset visita', $b2->inputCheck('resetvisita', true));
-if ($idtarget > 0) echo $b2->rigaEdit('Reset contatori', $b2->inputCheck('resetcounters', false));
 if ($idtarget > 0) echo $b2->rigaEdit('Cancella', $b2->inputCheck('xxx1', false) . $b2->inputCheck('xxx2', false));
 echo "\n<tr><td align='center' colspan='2'><input type='submit' value='-------- Aggiorna --------'></td></tr>";
 echo "\n</table>";
-// per la copia
 echo "\n</form>";
 
 if ($idtarget > 0) {

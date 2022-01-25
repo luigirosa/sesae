@@ -45,7 +45,7 @@
 //error_reporting ( E_ALL );
 //ini_set ( "display_errors", 'on' );
 
-define('SESAE_VERSION', "2022012401");
+define('SESAE_VERSION', "2022012501");
 
 if(!defined('SESAE')) {
 	header ('Location: https://www.google.com');
@@ -1411,6 +1411,27 @@ function getipid($ip) {
 }
 
 
+/**
+ * randomprobe()
+ * 
+ * Randomizza tutti i nextprobe
+ *
+ * 20220125 prima versione
+ * 
+ */
+function randomprobe() {
+	global $db,$b2;
+	$aprobe = array();
+	$cheprobe = -1;
+	//leggo i probe validi
+	$q = $db->query("SELECT idprobe FROM probe WHERE isenabled='1' AND isadmin='0'");
+	while ($r = $q->fetch_array()) {
+		$cheprobe++;
+		$aprobe[$cheprobe] = $r['idprobe'];
+	}
+	return($aprobe[rand(0,$cheprobe)]);
+}
+
 
 /**
  * randomizenext()
@@ -1434,6 +1455,21 @@ function randomizenext() {
 	while ($r = $q->fetch_array()) {
 		$db->query("UPDATE target SET nextprobe='" . $aprobe[rand(0,$cheprobe)] . "' WHERE idtarget='$r[idtarget]'");
 	} 
+}
+
+
+/**
+ * randomvisit()
+ * 
+ * Randomizza un numero sensato da mettere in target.visit per non mettere un numero troppo piccolo
+ *
+ * 20220125 prima versione
+ * 
+ */
+function randomvisit() {
+	global $db,$b2;
+	$r = $db->query("SELECT visited FROM `target` ORDER BY visited limit 1")->fetch_array();
+	return($r['visited'] - rand(0,1000));
 }
 
 
