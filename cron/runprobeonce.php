@@ -53,15 +53,19 @@ if (isset($argv[1]) and is_numeric($argv[1])) {
 	$r['idtarget'] = $argv[1];
 	echo "\nIDtarget forzato da command line.";
 } else {
-	// ritardo casuale per evitare collisioni
-	sleep(rand(1,7) + 2 * $aSetup['site']['id']);
+	//$r = $db->query("SELECT target.idtarget,target.visited
+	//                 FROM target
+	//                 LEFT JOIN targetprobe ON target.idtarget=targetprobe.idtarget
+	//                 WHERE target.enabled='1' AND targetprobe.idprobe='" . $aSetup['site']['id'] . "'
+	//                 ORDER BY target.visited 
+	//                 LIMIT 1")->fetch_array();
 	$r = $db->query("SELECT target.idtarget,target.visited
 	                 FROM target
-	                 LEFT JOIN targetprobe ON target.idtarget=targetprobe.idtarget
-	                 WHERE target.enabled='1' AND targetprobe.idprobe='" . $aSetup['site']['id'] . "'
+	                 WHERE target.nextprobe='" . $aSetup['site']['id'] . "'
 	                 ORDER BY target.visited 
 	                 LIMIT 1")->fetch_array();
 }
+
 
 echo "\nIDtarget: $r[idtarget]\n";
 echo "\n" . scantarget($r['idtarget'], $aSetup['site']['id']) . "\n";
