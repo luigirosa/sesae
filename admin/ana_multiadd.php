@@ -69,7 +69,6 @@ if (isset($_POST['sitelist'])) {
 					$a[] = $b2->campoSql('visited_before', 0);
 					$a[] = $b2->campoSql('lastprobe', 0);
 					$a[] = $b2->campoSql('nextprobe', randomprobe());
-error_log("INSERT INTO target SET " . implode(',', $a));
 					$db->query("INSERT INTO target SET " . implode(',', $a));
 					$idtarget = $db->insert_id;
 					// creo i record vuoti

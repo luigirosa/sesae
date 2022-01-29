@@ -1464,11 +1464,12 @@ function randomizenext() {
  * Randomizza un numero sensato da mettere in target.visit per non mettere un numero troppo piccolo
  *
  * 20220125 prima versione
+ * 20220129 aggiunta where sennò puo` tornare un valore negativo, che non e` proprio una bella idea
  * 
  */
 function randomvisit() {
 	global $db,$b2;
-	$r = $db->query("SELECT visited FROM `target` ORDER BY visited limit 1")->fetch_array();
+	$r = $db->query("SELECT visited FROM `target` WHERE visited>0 ORDER BY visited limit 1")->fetch_array();
 	return($r['visited'] - rand(1000,10000));
 }
 
