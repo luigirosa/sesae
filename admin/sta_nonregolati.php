@@ -83,7 +83,7 @@ switch ($gruppo) {
 		$qry01 = "SELECT iddnsauth AS id,dnsauth AS daregolare,dnsauth_stat,COUNT(dnsauth_stat) AS c 
 		          FROM dnsauth 
 		          GROUP BY dnsauth 
-		          ORDER BY REVERSE(dnsauth)";
+		          ORDER BY c DESC";
 		$secondocampo = false;
 	break;
 	case 'HTS':
