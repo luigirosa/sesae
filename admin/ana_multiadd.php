@@ -64,7 +64,12 @@ if (isset($_POST['sitelist'])) {
 					$a[] = $b2->campoSql('url', $url);
 					$a[] = $b2->campoSql('visited', randomvisit());
 					$a[] = $b2->campoSql('mailhost', '__new__');
+					$a[] = $b2->campoSql('enabled', 1);
+					$a[] = $b2->campoSql('counter', 0);
+					$a[] = $b2->campoSql('visited_before', 0);
+					$a[] = $b2->campoSql('lastprobe', 0);
 					$a[] = $b2->campoSql('nextprobe', randomprobe());
+error_log("INSERT INTO target SET " . implode(',', $a));
 					$db->query("INSERT INTO target SET " . implode(',', $a));
 					$idtarget = $db->insert_id;
 					// creo i record vuoti
